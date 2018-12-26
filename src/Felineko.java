@@ -10,6 +10,8 @@ public class Felineko extends PApplet{
     private int gameScreen = 0;
     private Map map;
     private MapController mapController = new MapController(this);
+    private EntityController entityController = new EntityController(this);
+    private Player hero;
 
     /**
      * Preset settings of the game.
@@ -27,10 +29,6 @@ public class Felineko extends PApplet{
         keys[4]=false;
     }
 
-    public void setUp(){
-
-    }
-
     /**
      * Updates the screen.
      */
@@ -39,11 +37,14 @@ public class Felineko extends PApplet{
             case 0:
                 background(menuBackground);
                 if (mouseX >= 207 && mouseX <= 392 && mouseY >= 380 && mouseY <= 416 && mousePressed) {
+                    hero = new Player(25, 5, 100, 100, "KNIGHT");
                     gameScreen = 1;
                 }
                 break;
             case 1:
                 mapController.drawMap(map);
+                entityController.applyGravity(map, hero);
+                entityController.drawEntity("HERO", hero.getX(), hero.getY());
                 break;
         }
     }
