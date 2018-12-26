@@ -44,12 +44,27 @@ public class Felineko extends PApplet{
             case 1:
                 mapController.drawMap(map);
                 entityController.applyGravity(map, hero);
+
+                if (keys[1]) {
+                    entityController.moveLeft(map, hero);
+                }
+
+                if (keys[0]) {
+                    entityController.moveRight(map, hero);
+                }
+
+                if (!(keys[1] || keys[0])){
+                    entityController.notMoving(map, hero);
+                }
+
                 entityController.drawEntity("HERO", hero.getX(), hero.getY());
                 break;
         }
     }
 
-    //Pressing down key.
+    /**
+     * Recording Key presses.
+     */
     public void keyPressed() {
         if (key == CODED) {
             if (keyCode == RIGHT) {
@@ -68,7 +83,9 @@ public class Felineko extends PApplet{
         }
     }
 
-    //Releasing key.
+    /**
+     * Recording Key Releases.
+     */
     public void keyReleased() {
         if (key == CODED) {
             if (keyCode == RIGHT) {
