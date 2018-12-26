@@ -48,6 +48,23 @@ class EntityController {
     }
 
     /**
+     * Updating x, y coordinates of player when jumping.
+     *
+     * @param map the current tile map.
+     * @param entity the entity.
+     */
+    public void jump(Map map, Entity entity){
+        entity.increYBy(-2*entity.getJumpSpeed());
+        entity.decreJumpSpeed();
+
+        for (int i = 0; i<Player.WIDTH; i++){
+            if (map.getTile((entity.getX()+i)/30, (entity.getY())/30).getType().equals("GROUND")) {
+                entity.increYBy(30-(entity.getY()+Player.HEIGHT)%30);
+            }
+        }
+    }
+
+    /**
      * Updating x, y coordinates of player when moving left.
      *
      * @param map the current tile map.
