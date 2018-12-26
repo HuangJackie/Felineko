@@ -1,5 +1,6 @@
 import processing.core.PApplet;
 import processing.core.PImage;
+import processing.sound.SoundFile;
 
 /**
  * A platformer game.
@@ -12,6 +13,9 @@ public class Felineko extends PApplet{
     private MapController mapController = new MapController(this);
     private EntityController entityController = new EntityController(this);
     private Player hero;
+    private SoundFile file;
+    String audioName = "Felineko.wav";
+    String path;
 
     /**
      * Preset settings of the game.
@@ -27,6 +31,9 @@ public class Felineko extends PApplet{
         keys[2]=false;
         keys[3]=false;
         keys[4]=false;
+        path = sketchPath(audioName);
+        file = new SoundFile(this, path);
+        file.play();
     }
 
     /**
@@ -43,6 +50,7 @@ public class Felineko extends PApplet{
                 break;
             case 1:
                 mapController.drawMap(map);
+                System.out.println(hero.getJumpCounter());
                 entityController.applyGravity(map, hero);
 
                 if (keys[1]) {
@@ -59,6 +67,13 @@ public class Felineko extends PApplet{
 
                 if (keys[2]) {
                     entityController.jump(map, hero);
+                    if (entityController.onGround(map, hero)){
+                        hero.setJumpCounter(hero.getJumpCounter()+1);
+                    }
+                }
+
+                if (!keys[2] && entityController.onGround(map, hero)){
+                    hero.setJumpCounter(0);
                 }
 
                 entityController.drawEntity("HERO", hero.getX(), hero.getY());
