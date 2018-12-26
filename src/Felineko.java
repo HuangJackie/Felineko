@@ -57,6 +57,10 @@ public class Felineko extends PApplet{
                     entityController.notMoving(map, hero);
                 }
 
+                if (keys[2]) {
+                    entityController.jump(map, hero);
+                }
+
                 entityController.drawEntity("HERO", hero.getX(), hero.getY());
                 break;
         }
