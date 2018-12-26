@@ -6,29 +6,62 @@ public class Map {
     private int rows;
     private int columns;
 
-    public Map(int rows, int columns) {
+    /**
+     * Creates a new Map with specified dimensions.
+     *
+     * @param rows number of rows in the tile map.
+     * @param columns number of columns in the tile map.
+     */
+    Map(int rows, int columns) {
         this.tileLocations = new Tile[rows][columns];
         this.rows = rows;
         this.columns = columns;
     }
 
+    /**
+     * Set the TileLocations in the Tile Map.
+     *
+     * @param tileLocations the tile locations.
+     */
     public void setTileLocations(Tile[][] tileLocations) {
         this.tileLocations = tileLocations;
     }
 
-    public void setTile(Tile tile) {
+    /**
+     * Set a specified Tile.
+     *
+     * @param tile the new tile.
+     */
+    void setTile(Tile tile) {
         tileLocations[tile.getX()][tile.getY()] = tile;
     }
 
-    public int getRows(){
+    /**
+     * Return the number of rows in the map.
+     *
+     * @return number of rows.
+     */
+    int getRows(){
         return rows;
     }
 
-    public int getColumns(){
+    /**
+     * Return the number of columns in the map.
+     *
+     * @return number of columns.
+     */
+    int getColumns(){
         return columns;
     }
 
-    public Tile getTile(int x, int y){
+    /**
+     * Return the tile at the specified x, y coordinate.
+     *
+     * @param x horizontal coordinate.
+     * @param y vertical coordinate.
+     * @return tile.
+     */
+    Tile getTile(int x, int y){
         return tileLocations[x][y];
     }
 }

@@ -1,8 +1,19 @@
-public class TileFactory {
-    public static final String AIR = " ";
-    public static final String GROUND = "";
+/**
+ * A TileFactory Class that creates various types of tiles.
+ */
+class TileFactory {
+    private static final String AIR = "-8927257";
+    private static final String GROUND = "-14112227";
 
-    public Tile createTile(String type, int x, int y){
+    /**
+     * Creates various subclasses of the class Tile.
+     *
+     * @param type the type of Tile.
+     * @param x horizontal coordinate.
+     * @param y vertical coordinate.
+     * @return new Tile.
+     */
+    Tile createTile(String type, int x, int y){
         switch(type) {
             case AIR:
                 return new Tile("AIR", x, y);

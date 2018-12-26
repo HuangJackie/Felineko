@@ -1,15 +1,25 @@
 import processing.core.PApplet;
 import processing.core.PImage;
 
+/**
+ * A platformer game.
+ */
 public class Felineko extends PApplet{
     private boolean[] keys = new boolean[6];
     private PImage menuBackground;
     private int gameScreen = 0;
+    private Map map;
+    private MapController mapController = new MapController(this);
 
+    /**
+     * Preset settings of the game.
+     */
     public void settings(){
         size(600, 600);
         menuBackground = loadImage("MenuTwo.png");
         menuBackground.resize(600, 0);
+        map = mapController.setUpMap();
+        mapController.loadMap(map);
         keys[0]=false;
         keys[1]=false;
         keys[2]=false;
@@ -17,6 +27,13 @@ public class Felineko extends PApplet{
         keys[4]=false;
     }
 
+    public void setUp(){
+
+    }
+
+    /**
+     * Updates the screen.
+     */
     public void draw(){
         switch (gameScreen) {
             case 0:
@@ -26,6 +43,7 @@ public class Felineko extends PApplet{
                 }
                 break;
             case 1:
+                mapController.drawMap(map);
                 break;
         }
     }

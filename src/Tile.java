@@ -1,13 +1,10 @@
-import processing.core.PApplet;
 import processing.core.PVector;
 
 /**
  * Creates a Tile object that invokes special properties/actions on the Player object.
  */
-public class Tile extends PApplet {
+public class Tile{
     private PVector position;
-    //private int x;
-    //private int y;
     private String type;
 
     /**
@@ -17,9 +14,7 @@ public class Tile extends PApplet {
      * @param x X-coordinate of the tile.
      * @param y Y-coordinate of the tile.
      */
-    public Tile(String type, int x, int y) {
-        //this.x = x;
-        //this.y = y;
+    Tile(String type, int x, int y) {
         position = new PVector(x, y);
         this.type = type;
     }
@@ -29,28 +24,28 @@ public class Tile extends PApplet {
      *
      * @param name New name of the tile.
      */
-    public void setType(String name) {
+    void setType(String name) {
         type = name;
     }
 
     /**
      * Returns the X-coordinate of the tile.
      */
-    public int getX() {
+    int getX() {
         return (int) position.x;
     }
 
     /**
      * Returns the Y-coordinate of the tile.
      */
-    public int getY() {
+    int getY() {
         return (int) position.y;
     }
 
     /**
      * Returns the type "name" of the tile.
      */
-    public String getType() {
+    String getType() {
         return type;
     }
 }
