@@ -51,12 +51,13 @@ class EntityController {
      * Updating x, y coordinates of player when moving left.
      *
      * @param map the current tile map.
-     * @param hero the entity.
+     * @param entity the entity.
      */
-    void moveLeft(Map map, Entity hero){
-        hero.increXBy(-hero.getVelocity());
-        hero.increVelocity();
-        hero.setDirection(Entity.LEFT);
+    void moveLeft(Map map, Entity entity){
+        entity.increXBy(-entity.getVelocity());
+        entity.increVelocity();
+        entity.setDirection(Entity.LEFT);
+        collisionCorrect(map, entity);
     }
 
     /**
@@ -69,6 +70,7 @@ class EntityController {
         entity.increXBy(entity.getVelocity());
         entity.increVelocity();
         entity.setDirection(Entity.RIGHT);
+        collisionCorrect(map, entity);
     }
 
     /**
@@ -84,6 +86,31 @@ class EntityController {
             entity.increXBy(entity.getVelocity());
         }
         entity.decreVelocity();
+        collisionCorrect(map, entity);
+    }
+
+    /**
+     * Added collision detection and correction moving left and right.
+     *
+     * @param map the current tile map.
+     * @param entity the entity.
+     */
+    private void collisionCorrect(Map map, Entity entity){
+        if (entity.getDirection().equals(Entity.LEFT)){
+            entity.increXBy(-entity.getVelocity());
+            for (int i = 0; i<Player.HEIGHT; i++) {
+                if (map.getTile((entity.getX())/30, (entity.getY()+i)/30).getType().equals("GROUND")) {
+                    entity.increXBy(30-(entity.getX())%30);
+                }
+            }
+        }else{
+            entity.increXBy(entity.getVelocity());
+            for (int i = 0; i<Player.HEIGHT; i++) {
+                if (map.getTile((entity.getX()+Player.WIDTH)/30, (entity.getY()+i)/30).getType().equals("GROUND")) {
+                    entity.increXBy(-(entity.getX()+Player.WIDTH)%30);
+                }
+            }
+        }
     }
 
 }
