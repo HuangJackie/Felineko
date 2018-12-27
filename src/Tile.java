@@ -3,7 +3,7 @@ import processing.core.PVector;
 /**
  * Creates a Tile object that invokes special properties/actions on the Player object.
  */
-public class Tile{
+class Tile{
     private PVector position;
     private String type;
 

@@ -3,7 +3,7 @@ import processing.core.PVector;
 /**
  * A Player or Enemy Entity in the game.
  */
-public abstract class Entity {
+abstract class Entity {
     private PVector location;
     private float fallSpeed;
     private final float FALLSPEED;
@@ -16,7 +16,7 @@ public abstract class Entity {
     static final String RIGHT = "RIGHT";
     static final String LEFT = "LEFT";
 
-    public Entity(int x, int y, int fallSpeed, int jumpSpeed){
+    Entity(int x, int y, int fallSpeed, int jumpSpeed){
         location = new PVector(x, y);
         this.fallSpeed = fallSpeed;
         this.FALLSPEED = fallSpeed;
@@ -28,75 +28,71 @@ public abstract class Entity {
         direction = RIGHT;
     }
 
-    public void resetJumpSpeed(){
+    void resetJumpSpeed(){
         jumpSpeed = JUMPSPEED;
     }
 
-    public int getJumpSpeed(){
+    int getJumpSpeed(){
         return (int) jumpSpeed;
     }
 
-    public void decreJumpSpeed(){
+    void decreJumpSpeed(){
         if (jumpSpeed > 0){
             jumpSpeed -= 0.5;
         }
     }
 
-    public void setDirection(String newDirection){
+    void setDirection(String newDirection){
         direction = newDirection;
     }
 
-    public String getDirection(){
+    String getDirection(){
         return direction;
     }
 
-    public void resetVelocity(){
-        velocity = 1;
-    }
-
-    public void increVelocity(){
+    void increVelocity(){
         if (velocity <= VELOCITY){
             velocity += 0.5;
         }
     }
 
-    public void decreVelocity(){
+    void decreVelocity(){
         if (velocity > 0){
             velocity -= 0.5;
         }
     }
 
-    public int getVelocity(){
+    int getVelocity(){
         return (int) velocity;
     }
 
-    public int getFallSpeed(){
+    int getFallSpeed(){
         return (int) fallSpeed;
     }
 
-    public void increFallSpeed(){
+    void increFallSpeed(){
         if (fallSpeed <= MAXFALLSPEED){
-            fallSpeed += 0.4;
+            fallSpeed += 0.3;
         }
     }
 
-    public void resetFallSpeed(){
+    void resetFallSpeed(){
         fallSpeed = FALLSPEED;
     }
 
-    public int getX(){
+    int getX(){
         return (int) location.x;
     }
 
-    public int getY(){
+    int getY(){
         return (int) location.y;
     }
 
-    public void increXBy(int x){
+    void increXBy(int x){
         location.x += x;
     }
 
-    public void increYBy(int y){
+    void increYBy(int y){
         location.y += y;
     }
 }

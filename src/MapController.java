@@ -5,7 +5,7 @@ import processing.core.PVector;
 /**
  * Creates a MapController that loads and displays the tile map on the screen.
  */
-public class MapController {
+class MapController {
     private PApplet felineko;
 
     /**
