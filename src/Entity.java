@@ -13,6 +13,9 @@ abstract class Entity {
     private float velocity;
     private final float VELOCITY;
     private String direction;
+    private int HP;
+    private boolean damageState;
+    private int damageTime;
     static final String RIGHT = "RIGHT";
     static final String LEFT = "LEFT";
 
@@ -26,6 +29,7 @@ abstract class Entity {
         this.VELOCITY = 5;
         this.velocity = 1;
         direction = RIGHT;
+        HP = 100;
     }
 
     void resetJumpSpeed(){
@@ -94,5 +98,29 @@ abstract class Entity {
 
     void increYBy(int y){
         location.y += y;
+    }
+
+    int getHP() {
+        return HP;
+    }
+
+    void setHP(int HP) {
+        this.HP = HP;
+    }
+
+    boolean isDamageState() {
+        return damageState;
+    }
+
+    void setDamageState(boolean damageState) {
+        this.damageState = damageState;
+    }
+
+    int getDamageTime() {
+        return damageTime;
+    }
+
+    void setDamageTime(int damageTime) {
+        this.damageTime = damageTime;
     }
 }

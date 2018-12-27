@@ -5,9 +5,9 @@ class TileFactory {
 //    private static final String AIR = "-8927257";
 //    private static final String GROUND = "-14112227";
 //    private static final String SPIKE = "-14178020";
-    private static final String AIR = "-8927257";
-    private static final String GROUND = "-14178020";
-    private static final String SPIKE = "-196600";
+    public static final String AIR = "-8927257";
+    public static final String GROUND = "-14178020";
+    public static final String SPIKE = "-196600";
     /**
      * Creates various subclasses of the class Tile.
      *

@@ -1,12 +1,14 @@
 import processing.core.PApplet;
 
 class PlayerController extends EntityController{
+    private PApplet felineko;
 
     PlayerController (PApplet felineko){
         super(felineko);
+        this.felineko = felineko;
     }
 
-    boolean canJump(Map map, Player hero){
+    private boolean canJump(Map map, Player hero){
         return (hero.getJumpCounter() < 2 && !onGround(map, hero) && !hero.isSlidOff()) || (onGround(map, hero) && !hero.hasJumpedOnce());
     }
 
@@ -29,4 +31,28 @@ class PlayerController extends EntityController{
             hero.setSlidOff(true);
         }
     }
+
+    void checkSpecialCollision(Map map, Player hero) {
+        for (int i = 0; i < Player.HEIGHT; i+=29){
+            applyTileEffect(map.getTile(hero.getX()/30, (hero.getY()+i)/30), hero);
+            applyTileEffect(map.getTile((hero.getX()+Player.WIDTH-1)/30, (hero.getY()+i)/30), hero);
+        }
+    }
+
+    private void applyTileEffect(Tile tile, Player hero) {
+        String type = tile.getType();
+        if (type.equals("SPIKE")){
+            if (!hero.isDamageState()) {
+                ((SpikeTile) tile).damageHP(hero);
+                hero.setDamageTime(felineko.millis());
+            }
+        }
+    }
+
+    void immunityUpdate(Player hero){
+        if (felineko.millis() - hero.getDamageTime() > 1000) {
+            hero.setDamageState(false);
+        }
+    }
+
 }
