@@ -1,5 +1,6 @@
 import processing.core.PApplet;
 import processing.core.PImage;
+import processing.core.PVector;
 import processing.sound.SoundFile;
 /* Music created using https://www.beepbox.co/#6n31s0kbl00e05t7m0a7g0fj7i0r1o3210T0w1f1d1c0h0v0T0w2f1d1c0h0v0T0w2f1d1c0h0v0T2w1d1v0b4x8Q4x4h4h4h4h4h4h4h4h4h4h4h4h4h4x804h4h4h4p21KIMMpFBcu6p_iCu3jmCBwFxMfR4QPRnknRdnmZgjZplcFEZZVRbCDTw9nPmQPPDeYPOg0F5gFDM5cu1V0swuhg0CBcssd50g4CC9oq3b9Qkk6k0
  * BeepBox website.
@@ -17,6 +18,8 @@ public class Felineko extends PApplet{
     private EntityController entityController = new EntityController(this);
     private PlayerController playerController = new PlayerController(this);
     private Player hero;
+    private PVector translation = new PVector(0, 0);
+    private PVector prevPlayerPos = new PVector(100, 100);
     private SoundFile file;
     String audioName = "Felineko.wav";
     String path;
@@ -53,6 +56,8 @@ public class Felineko extends PApplet{
                 }
                 break;
             case 1:
+                translate(translation.x+100, translation.y+150);
+
                 mapController.drawMap(map);
                 entityController.applyGravity(map, hero);
 
@@ -75,6 +80,10 @@ public class Felineko extends PApplet{
                 }
 
                 entityController.drawEntity("HERO", hero.getX(), hero.getY());
+                translation.x -= hero.getX()-prevPlayerPos.x;
+                translation.y -= hero.getY()-prevPlayerPos.y;
+                prevPlayerPos.x = hero.getX();
+                prevPlayerPos.y = hero.getY();
                 break;
         }
     }
