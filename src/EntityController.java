@@ -47,15 +47,27 @@ class EntityController {
         }
     }
 
+    boolean onGround(Map map, Entity entity){
+        for (int i = 0; i<Player.WIDTH; i++) {
+            if (map.getTile((entity.getX()+i)/30, (entity.getY()+Player.HEIGHT)/30).getType().equals("GROUND")) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * Updating x, y coordinates of player when jumping.
      *
      * @param map the current tile map.
      * @param entity the entity.
      */
-    public void jump(Map map, Entity entity){
+    void jump(Map map, Entity entity){
         entity.increYBy(-2*entity.getJumpSpeed());
         entity.decreJumpSpeed();
+        if(entity.getJumpSpeed() > 0){
+            entity.resetFallSpeed();
+        }
 
         for (int i = 0; i<Player.WIDTH; i++){
             if (map.getTile((entity.getX()+i)/30, (entity.getY())/30).getType().equals("GROUND")) {
@@ -120,14 +132,13 @@ class EntityController {
                     entity.increXBy(30-(entity.getX())%30);
                 }
             }
-        }else{
+        }else {
             entity.increXBy(entity.getVelocity());
-            for (int i = 0; i<Player.HEIGHT; i++) {
-                if (map.getTile((entity.getX()+Player.WIDTH)/30, (entity.getY()+i)/30).getType().equals("GROUND")) {
-                    entity.increXBy(-(entity.getX()+Player.WIDTH)%30);
+            for (int i = 0; i < Player.HEIGHT; i++) {
+                if (map.getTile((entity.getX() + Player.WIDTH) / 30, (entity.getY() + i) / 30).getType().equals("GROUND")) {
+                    entity.increXBy(-(entity.getX() + Player.WIDTH) % 30);
                 }
             }
         }
     }
-
 }

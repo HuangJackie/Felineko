@@ -1,6 +1,9 @@
 import processing.core.PApplet;
 import processing.core.PImage;
 import processing.sound.SoundFile;
+/* Music created using https://www.beepbox.co/#6n31s0kbl00e05t7m0a7g0fj7i0r1o3210T0w1f1d1c0h0v0T0w2f1d1c0h0v0T0w2f1d1c0h0v0T2w1d1v0b4x8Q4x4h4h4h4h4h4h4h4h4h4h4h4h4h4x804h4h4h4p21KIMMpFBcu6p_iCu3jmCBwFxMfR4QPRnknRdnmZgjZplcFEZZVRbCDTw9nPmQPPDeYPOg0F5gFDM5cu1V0swuhg0CBcssd50g4CC9oq3b9Qkk6k0
+ * BeepBox website.
+ */
 
 /**
  * A platformer game.
@@ -12,6 +15,7 @@ public class Felineko extends PApplet{
     private Map map;
     private MapController mapController = new MapController(this);
     private EntityController entityController = new EntityController(this);
+    private PlayerController playerController = new PlayerController(this);
     private Player hero;
     private SoundFile file;
     String audioName = "Felineko.wav";
@@ -33,7 +37,7 @@ public class Felineko extends PApplet{
         keys[4]=false;
         path = sketchPath(audioName);
         file = new SoundFile(this, path);
-        file.play();
+//        file.play();
     }
 
     /**
@@ -50,7 +54,7 @@ public class Felineko extends PApplet{
                 break;
             case 1:
                 mapController.drawMap(map);
-                System.out.println(hero.getJumpCounter());
+                System.out.println(hero.getJumpCounter() + " " + hero.hasJumpedOnce() + " " + entityController.onGround(map, hero) + " " + hero.isSlidOff());
                 entityController.applyGravity(map, hero);
 
                 if (keys[1]) {
@@ -65,15 +69,23 @@ public class Felineko extends PApplet{
                     entityController.notMoving(map, hero);
                 }
 
-                if (keys[2]) {
-                    entityController.jump(map, hero);
-                    if (entityController.onGround(map, hero)){
-                        hero.setJumpCounter(hero.getJumpCounter()+1);
-                    }
+                if (hero.hasJumpedOnce() && entityController.onGround(map, hero)){
+                    hero.setSlidOff(true);
                 }
 
-                if (!keys[2] && entityController.onGround(map, hero)){
-                    hero.setJumpCounter(0);
+                if (keys[2] && playerController.canJump(map, hero)) {
+                    System.out.println("If");
+                    entityController.jump(map, hero);
+                    hero.setHasJumpedOnce(true);
+                } else if (!keys[2]) {
+//                    playerController.updateState(hero);
+                    if (entityController.onGround(map, hero)) {
+                        hero.setJumpCounter(0);
+                        hero.resetFallSpeed();
+                        hero.resetJumpSpeed();
+                    }
+                    hero.setHasJumpedOnce(false);
+                    hero.setSlidOff(false);
                 }
 
                 entityController.drawEntity("HERO", hero.getX(), hero.getY());
@@ -112,6 +124,8 @@ public class Felineko extends PApplet{
             } else if (keyCode == LEFT) {
                 keys[1] = false;
             } else if (keyCode == UP) {
+                hero.setJumpCounter(hero.getJumpCounter()+1);
+                hero.resetJumpSpeed();
                 keys[2] = false;
             } else if (keyCode == DOWN) {
                 keys[3] = false;
