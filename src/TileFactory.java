@@ -2,9 +2,12 @@
  * A TileFactory Class that creates various types of tiles.
  */
 class TileFactory {
+//    private static final String AIR = "-8927257";
+//    private static final String GROUND = "-14112227";
+//    private static final String SPIKE = "-14178020";
     private static final String AIR = "-8927257";
-    private static final String GROUND = "-14112227";
-
+    private static final String GROUND = "-14178020";
+    private static final String SPIKE = "-196600";
     /**
      * Creates various subclasses of the class Tile.
      *
@@ -19,6 +22,8 @@ class TileFactory {
                 return new Tile("AIR", x, y);
             case GROUND:
                 return new Tile("GROUND", x, y);
+            case SPIKE:
+                return new SpikeTile("SPIKE", x, y);
             default:
                 return new Tile(type, x, y);
         }
