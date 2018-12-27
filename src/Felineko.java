@@ -2,7 +2,7 @@ import processing.core.PApplet;
 import processing.core.PImage;
 import processing.core.PVector;
 import processing.sound.SoundFile;
-/* Music created using https://www.beepbox.co/#6n31s0kbl00e05t7m0a7g0fj7i0r1o3210T0w1f1d1c0h0v0T0w2f1d1c0h0v0T0w2f1d1c0h0v0T2w1d1v0b4x8Q4x4h4h4h4h4h4h4h4h4h4h4h4h4h4x804h4h4h4p21KIMMpFBcu6p_iCu3jmCBwFxMfR4QPRnknRdnmZgjZplcFEZZVRbCDTw9nPmQPPDeYPOg0F5gFDM5cu1V0swuhg0CBcssd50g4CC9oq3b9Qkk6k0
+/* Music created using https://www.beepbox.co/#6n31s0kbl00e05t7m0a7g0fj7i0r1o3210T0w1f3d1c4h0v0T0w1f1d1c3h0v2T0w2f1d1c0h0v3T2w1d1v0b4zgQ4x4h4h4h4h4h4h4h4h4z8N4h4h4h4x804h4h4h4p229IMMpFBcu6p_iCu3jmCBwFxMfR4QPRnknRdnmZgjZplcFEZZVRbCDTw9nPmQPPDeYPOg0F5gFDM5cu1V0swuhhpxNjdjCgYidd7i3g1daoUZ0q0Pjng6AcQFEYz19Fym6wOOt551B0
  * BeepBox website.
  */
 
@@ -40,7 +40,8 @@ public class Felineko extends PApplet{
         keys[4]=false;
         path = sketchPath(audioName);
         file = new SoundFile(this, path);
-//        file.play();
+        file.play();
+        file.loop();
     }
 
     /**
@@ -57,8 +58,10 @@ public class Felineko extends PApplet{
                 break;
             case 1:
                 translate(translation.x+100, translation.y+150);
-
+                System.out.println(hero.getHP());
+                playerController.immunityUpdate(hero);
                 mapController.drawMap(map);
+                playerController.checkSpecialCollision(map, hero);
                 entityController.applyGravity(map, hero);
 
                 if (keys[1]) {
