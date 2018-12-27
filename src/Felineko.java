@@ -54,7 +54,6 @@ public class Felineko extends PApplet{
                 break;
             case 1:
                 mapController.drawMap(map);
-                System.out.println(hero.getJumpCounter() + " " + hero.hasJumpedOnce() + " " + entityController.onGround(map, hero) + " " + hero.isSlidOff());
                 entityController.applyGravity(map, hero);
 
                 if (keys[1]) {
@@ -69,23 +68,10 @@ public class Felineko extends PApplet{
                     entityController.notMoving(map, hero);
                 }
 
-                if (hero.hasJumpedOnce() && entityController.onGround(map, hero)){
-                    hero.setSlidOff(true);
-                }
-
-                if (keys[2] && playerController.canJump(map, hero)) {
-                    System.out.println("If");
-                    entityController.jump(map, hero);
-                    hero.setHasJumpedOnce(true);
-                } else if (!keys[2]) {
-//                    playerController.updateState(hero);
-                    if (entityController.onGround(map, hero)) {
-                        hero.setJumpCounter(0);
-                        hero.resetFallSpeed();
-                        hero.resetJumpSpeed();
-                    }
-                    hero.setHasJumpedOnce(false);
-                    hero.setSlidOff(false);
+                if (keys[2]) {
+                    playerController.playerJump(map, hero);
+                } else {
+                    playerController.notJumping(map, hero);
                 }
 
                 entityController.drawEntity("HERO", hero.getX(), hero.getY());
