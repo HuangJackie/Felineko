@@ -17,7 +17,9 @@ public class Felineko extends PApplet{
     private MapController mapController = new MapController(this);
     private EntityController entityController = new EntityController(this);
     private PlayerController playerController = new PlayerController(this);
+    private EnemyController enemyController = new EnemyController(this);
     private Player hero;
+    private Enemy snake;
     private PVector translation = new PVector(0, 0);
     private PVector prevPlayerPos = new PVector(100, 100);
     private SoundFile file;
@@ -44,6 +46,7 @@ public class Felineko extends PApplet{
         keys[4]=false;
         path = sketchPath(audioName);
         file = new SoundFile(this, path);
+        snake = new Enemy(100, 210, 1, 7, 20, 30, 60);
 //        file.play();
 //        file.loop();
     }
@@ -56,7 +59,7 @@ public class Felineko extends PApplet{
             case 0:
                 background(menuBackground);
                 if (mouseX >= 207 && mouseX <= 392 && mouseY >= 380 && mouseY <= 416 && mousePressed) {
-                    hero = new Player(25, 5, 100, 100, "KNIGHT");
+                    hero = new Player(25, 5, 100, 100, "KNIGHT", 60, 30);
                     gameScreen = 1;
                 }
                 break;
@@ -87,6 +90,8 @@ public class Felineko extends PApplet{
                 }
 
                 entityController.drawEntity("HERO", hero.getX(), hero.getY());
+                entityController.drawEntity("SNAKE", snake.getX(), snake.getY());
+                enemyController.updateLocation(map, snake);
                 translation.x -= hero.getX()-prevPlayerPos.x;
                 translation.y -= hero.getY()-prevPlayerPos.y;
                 prevPlayerPos.x = hero.getX();

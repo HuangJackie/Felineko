@@ -38,9 +38,9 @@ class EntityController {
         entity.increYBy(2*entity.getFallSpeed());
         entity.increFallSpeed();
 
-        for (int i = 0; i<Player.WIDTH; i++) {
-            if (map.getTile((entity.getX()+i)/30, (entity.getY()+Player.HEIGHT)/30).getType().equals("GROUND")) {
-                entity.increYBy(-(entity.getY()+Player.HEIGHT)%30);
+        for (int i = 0; i<entity.getWidth(); i++) {
+            if (map.getTile((entity.getX()+i)/30, (entity.getY()+entity.getHeight())/30).getType().equals("GROUND")) {
+                entity.increYBy(-(entity.getY()+entity.getHeight())%30);
                 entity.resetFallSpeed();
                 entity.resetJumpSpeed();
             }
@@ -48,8 +48,8 @@ class EntityController {
     }
 
     boolean onGround(Map map, Entity entity){
-        for (int i = 0; i<Player.WIDTH; i++) {
-            if (map.getTile((entity.getX()+i)/30, (entity.getY()+Player.HEIGHT)/30).getType().equals("GROUND")) {
+        for (int i = 0; i<entity.getWidth(); i++) {
+            if (map.getTile((entity.getX()+i)/30, (entity.getY()+entity.getHeight())/30).getType().equals("GROUND")) {
                 return true;
             }
         }
@@ -69,9 +69,9 @@ class EntityController {
             entity.resetFallSpeed();
         }
 
-        for (int i = 0; i<Player.WIDTH; i++){
+        for (int i = 0; i<entity.getWidth(); i++){
             if (map.getTile((entity.getX()+i)/30, (entity.getY())/30).getType().equals("GROUND")) {
-                entity.increYBy(30-(entity.getY()+Player.HEIGHT)%30);
+                entity.increYBy(30-(entity.getY()+entity.getHeight())%30);
             }
         }
     }
@@ -127,16 +127,16 @@ class EntityController {
     private void collisionCorrect(Map map, Entity entity){
         if (entity.getDirection().equals(Entity.LEFT)){
             entity.increXBy(-entity.getVelocity());
-            for (int i = 0; i<Player.HEIGHT; i++) {
+            for (int i = 0; i<entity.getHeight(); i++) {
                 if (map.getTile((entity.getX())/30, (entity.getY()+i)/30).getType().equals("GROUND")) {
                     entity.increXBy(30-(entity.getX())%30);
                 }
             }
         }else {
             entity.increXBy(entity.getVelocity());
-            for (int i = 0; i < Player.HEIGHT; i++) {
-                if (map.getTile((entity.getX() + Player.WIDTH) / 30, (entity.getY() + i) / 30).getType().equals("GROUND")) {
-                    entity.increXBy(-(entity.getX() + Player.WIDTH) % 30);
+            for (int i = 0; i < entity.getHeight(); i++) {
+                if (map.getTile((entity.getX() + entity.getWidth()) / 30, (entity.getY() + i) / 30).getType().equals("GROUND")) {
+                    entity.increXBy(-(entity.getX() + entity.getWidth()) % 30);
                 }
             }
         }

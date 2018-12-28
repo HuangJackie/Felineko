@@ -18,8 +18,10 @@ abstract class Entity {
     private int damageTime;
     static final String RIGHT = "RIGHT";
     static final String LEFT = "LEFT";
+    private final int HEIGHT;
+    private final int WIDTH;
 
-    Entity(int x, int y, int fallSpeed, int jumpSpeed){
+    Entity(int x, int y, int fallSpeed, int jumpSpeed, int height, int width){
         location = new PVector(x, y);
         this.fallSpeed = fallSpeed;
         this.FALLSPEED = fallSpeed;
@@ -30,6 +32,8 @@ abstract class Entity {
         this.velocity = 1;
         direction = RIGHT;
         HP = 100;
+        HEIGHT = height;
+        WIDTH = width;
     }
 
     void resetJumpSpeed(){
@@ -122,5 +126,13 @@ abstract class Entity {
 
     void setDamageTime(int damageTime) {
         this.damageTime = damageTime;
+    }
+
+    public int getHeight() {
+        return HEIGHT;
+    }
+
+    public int getWidth() {
+        return WIDTH;
     }
 }

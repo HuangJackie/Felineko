@@ -5,8 +5,6 @@ class Player extends Entity {
     private int jumpCounter;
     private boolean hasJumpedOnce;
     private boolean slidOff;
-    static final int WIDTH = 30;
-    static final int HEIGHT = 60;
 
     /**
      * Creates a Player with a specified HP, AP, X/Y location and a type (Knight or Mage).
@@ -17,8 +15,8 @@ class Player extends Entity {
      * @param y Y-coordinate of the Player.
      * @param type The type of player (Knight or Mage subclass).
      */
-    Player(int health, int attack, int x, int y, String type) {
-        super(x, y, 1, 7);
+    Player(int health, int attack, int x, int y, String type, int height, int width) {
+        super(x, y, 1, 7, height, width);
         jumpCounter = 0;
     }
 

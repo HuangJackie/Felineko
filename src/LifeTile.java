@@ -16,7 +16,7 @@ class LifeTile extends Tile {
     }
 
     /**
-     * Increases the health of the player and initializes a period of immunity.
+     * Increases the health of the player.
      *
      * @param hero The player object to increase HP from.
      */
