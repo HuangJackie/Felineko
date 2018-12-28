@@ -2,16 +2,21 @@ import processing.core.PApplet;
 import processing.core.PImage;
 import processing.core.PVector;
 
+import java.util.Observable;
+import java.util.Observer;
+
 /**
  * Creates a MapController that loads and displays the tile map on the screen.
  */
-class MapController {
+class MapController implements Observer {
     private PApplet felineko;
 
     /**
      * Images of each background tile.
      */
     private PImage[][] sprites;
+
+    private Map map;
 
     MapController(PApplet felineko){
         this.felineko = felineko;
@@ -32,8 +37,10 @@ class MapController {
                 String type = Integer.toString(tileMap.get(i, j));
                 Tile newTile = tileFactory.createTile(type, i, j);
                 newMap.setTile(newTile);
+                newTile.addObserver(this);
             }
         }
+        this.map = newMap;
         return newMap;
     }
 
@@ -63,5 +70,14 @@ class MapController {
                 felineko.image(sprites[i][j], i*30, j*30);
             }
         }
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        Tile tile = (Tile) o;
+        int x = tile.getX();
+        int y = tile.getY();
+        System.out.println(map.getTile(x, y).getType() + " " + map.getTile(x, y).getX() + "  a " + map.getTile(x, y).getY());
+        sprites[x][y] = felineko.loadImage(map.getTile(x, y).getType()+".png");
     }
 }

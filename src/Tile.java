@@ -1,9 +1,11 @@
 import processing.core.PVector;
 
+import java.util.Observable;
+
 /**
  * Creates a Tile object that invokes special properties/actions on the Player object.
  */
-class Tile{
+class Tile extends Observable {
     private PVector position;
     private String type;
 
