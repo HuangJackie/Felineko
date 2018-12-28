@@ -8,6 +8,8 @@ class TileFactory {
     public static final String AIR = "-8927257";
     public static final String GROUND = "-14178020";
     public static final String SPIKE = "-196600";
+    public static final String LIFE = "-46419";
+
     /**
      * Creates various subclasses of the class Tile.
      *
@@ -24,6 +26,8 @@ class TileFactory {
                 return new Tile("GROUND", x, y);
             case SPIKE:
                 return new SpikeTile("SPIKE", x, y);
+            case LIFE:
+                return new LifeTile("LIFE", x, y);
             default:
                 return new Tile(type, x, y);
         }

@@ -34,18 +34,21 @@ class PlayerController extends EntityController{
 
     void checkSpecialCollision(Map map, Player hero) {
         for (int i = 0; i < Player.HEIGHT; i+=29){
-            applyTileEffect(map.getTile(hero.getX()/30, (hero.getY()+i)/30), hero);
-            applyTileEffect(map.getTile((hero.getX()+Player.WIDTH-1)/30, (hero.getY()+i)/30), hero);
+            applyTileEffect(map, map.getTile(hero.getX()/30, (hero.getY()+i)/30), hero);
+            applyTileEffect(map, map.getTile((hero.getX()+Player.WIDTH-1)/30, (hero.getY()+i)/30), hero);
         }
     }
 
-    private void applyTileEffect(Tile tile, Player hero) {
+    private void applyTileEffect(Map map, Tile tile, Player hero) {
         String type = tile.getType();
         if (type.equals("SPIKE")){
             if (!hero.isDamageState()) {
                 ((SpikeTile) tile).damageHP(hero);
                 hero.setDamageTime(felineko.millis());
             }
+        }else if (type.equals("LIFE")){
+            ((LifeTile) tile).recoverHP(hero);
+//            map.setTile(new Tile("AIR", tile.getX(), tile.getY()));
         }
     }
 

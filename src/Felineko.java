@@ -21,6 +21,7 @@ public class Felineko extends PApplet{
     private PVector translation = new PVector(0, 0);
     private PVector prevPlayerPos = new PVector(100, 100);
     private SoundFile file;
+    private PImage[] healthBar = new PImage[11];
     String audioName = "Felineko.wav";
     String path;
 
@@ -31,6 +32,9 @@ public class Felineko extends PApplet{
         size(600, 600);
         menuBackground = loadImage("MenuTwo.png");
         menuBackground.resize(600, 0);
+        for (int i = 0; i < healthBar.length; i++){
+            healthBar[i] = loadImage(Integer.toString(i*10)+".png");
+        }
         map = mapController.setUpMap();
         mapController.loadMap(map);
         keys[0]=false;
@@ -40,8 +44,8 @@ public class Felineko extends PApplet{
         keys[4]=false;
         path = sketchPath(audioName);
         file = new SoundFile(this, path);
-        file.play();
-        file.loop();
+//        file.play();
+//        file.loop();
     }
 
     /**
@@ -58,9 +62,9 @@ public class Felineko extends PApplet{
                 break;
             case 1:
                 translate(translation.x+100, translation.y+150);
-                System.out.println(hero.getHP());
                 playerController.immunityUpdate(hero);
                 mapController.drawMap(map);
+                image(healthBar[hero.getHP()/10],-(translation.x + 100), -(translation.y + 150));
                 playerController.checkSpecialCollision(map, hero);
                 entityController.applyGravity(map, hero);
 
