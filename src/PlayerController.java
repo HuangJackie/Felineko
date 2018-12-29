@@ -1,11 +1,9 @@
 import processing.core.PApplet;
 
 class PlayerController extends EntityController{
-    private PApplet felineko;
 
     PlayerController (PApplet felineko){
         super(felineko);
-        this.felineko = felineko;
     }
 
     private boolean canJump(Map map, Player hero){
@@ -44,7 +42,7 @@ class PlayerController extends EntityController{
         if (type.equals("SPIKE")){
             if (!hero.isDamageState()) {
                 ((SpikeTile) tile).damageHP(hero);
-                hero.setDamageTime(felineko.millis());
+                hero.setDamageTime(getPApplet().millis());
             }
         }else if (type.equals("LIFE")){
             ((LifeTile) tile).recoverHP(hero);
@@ -53,7 +51,7 @@ class PlayerController extends EntityController{
     }
 
     void immunityUpdate(Player hero){
-        if (felineko.millis() - hero.getDamageTime() > 1000) {
+        if (getPApplet().millis() - hero.getDamageTime() > 1000) {
             hero.setDamageState(false);
         }
     }

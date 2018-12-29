@@ -141,4 +141,8 @@ class EntityController {
             }
         }
     }
+
+    PApplet getPApplet(){
+        return felineko;
+    }
 }

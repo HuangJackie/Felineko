@@ -2,6 +2,8 @@ import processing.core.PApplet;
 import processing.core.PImage;
 import processing.core.PVector;
 import processing.sound.SoundFile;
+
+import java.util.ArrayList;
 /* Music created using https://www.beepbox.co/#6n31s0kbl00e05t7m0a7g0fj7i0r1o3210T0w1f3d1c4h0v0T0w1f1d1c3h0v2T0w2f1d1c0h0v3T2w1d1v0b4zgQ4x4h4h4h4h4h4h4h4h4z8N4h4h4h4x804h4h4h4p229IMMpFBcu6p_iCu3jmCBwFxMfR4QPRnknRdnmZgjZplcFEZZVRbCDTw9nPmQPPDeYPOg0F5gFDM5cu1V0swuhhpxNjdjCgYidd7i3g1daoUZ0q0Pjng6AcQFEYz19Fym6wOOt551B0
  * BeepBox website.
  */
@@ -17,7 +19,7 @@ public class Felineko extends PApplet{
     private MapController mapController = new MapController(this);
     private EntityController entityController = new EntityController(this);
     private PlayerController playerController = new PlayerController(this);
-    private EnemyController enemyController = new EnemyController(this);
+    private EnemyController enemyController;
     private Player hero;
     private Enemy snake;
     private PVector translation = new PVector(0, 0);
@@ -46,7 +48,10 @@ public class Felineko extends PApplet{
         keys[4]=false;
         path = sketchPath(audioName);
         file = new SoundFile(this, path);
+        ArrayList<Enemy> activeEnemies = new ArrayList<>();
         snake = new Enemy(100, 210, 1, 7, 20, 30, 60);
+        activeEnemies.add(snake);
+        enemyController = new EnemyController(this, activeEnemies);
 //        file.play();
 //        file.loop();
     }
@@ -92,6 +97,7 @@ public class Felineko extends PApplet{
                 entityController.drawEntity("HERO", hero.getX(), hero.getY());
                 entityController.drawEntity("SNAKE", snake.getX(), snake.getY());
                 enemyController.updateLocation(map, snake);
+                enemyController.attackPlayer(hero);
                 translation.x -= hero.getX()-prevPlayerPos.x;
                 translation.y -= hero.getY()-prevPlayerPos.y;
                 prevPlayerPos.x = hero.getX();

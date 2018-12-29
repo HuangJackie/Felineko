@@ -6,12 +6,8 @@ public class Enemy extends Entity {
         this.damagePoints = damagePoints;
     }
 
-    public int getDamagePoints() {
+    int getDamagePoints() {
         return damagePoints;
-    }
-
-    public void setDamagePoints(int damagePoints) {
-        this.damagePoints = damagePoints;
     }
 
     void changeDirection(){
@@ -20,5 +16,14 @@ public class Enemy extends Entity {
         }else{
             this.setDirection(Entity.RIGHT);
         }
+    }
+
+    boolean withinAttackRange(Player hero){
+        int xHeroLeft = hero.getX();
+        int xHeroRight = hero.getX() + hero.getWidth();
+        int yHeroBottom = hero.getY() + hero.getHeight() - 1;
+        boolean leftCollide = (getX() < xHeroLeft && xHeroLeft < getX() + getWidth()) && (getY() < yHeroBottom && yHeroBottom < getY() + getHeight());
+        boolean rightCollide = (getX() < xHeroRight && xHeroRight < getX() + getWidth()) && (getY() < yHeroBottom && yHeroBottom < getY() + getHeight());
+        return leftCollide || rightCollide;
     }
 }

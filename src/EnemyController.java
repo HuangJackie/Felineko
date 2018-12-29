@@ -1,13 +1,19 @@
 import processing.core.PApplet;
 
-public class EnemyController extends EntityController {
+import java.util.ArrayList;
+
+class EnemyController extends EntityController {
+
+    private ArrayList<Enemy> activeEnemies;
+
     /**
      * Creates a new EntityController to manage drawing and updating location.
      *
      * @param felineko the PApplet of the main sketch
      */
-    EnemyController(PApplet felineko) {
+    EnemyController(PApplet felineko, ArrayList<Enemy> activeEnemies) {
         super(felineko);
+        this.activeEnemies = activeEnemies;
     }
 
     void updateLocation(Map map, Enemy enemy){
@@ -19,17 +25,30 @@ public class EnemyController extends EntityController {
         boolean leftWall = map.getTile((x-1)/30, y/30).getType().equals("GROUND") && direction.equals(Entity.LEFT);
         boolean rightWall = map.getTile((x+enemy.getWidth()+1)/30, y/30).getType().equals("GROUND") && direction.equals(Entity.RIGHT);
 
-        System.out.println(enemy.getX());
         if (direction.equals(Entity.LEFT)){
             moveLeft(map, enemy);
         } else {
             moveRight(map, enemy);
         }
-        System.out.println(enemy.getVelocity() + " a");
-
 
         if (leftEdge || rightEdge || leftWall || rightWall){
             enemy.changeDirection();
+        }
+    }
+
+    void attackPlayer(Player hero){
+        int i = 0;
+        System.out.println("on");
+
+        while(activeEnemies.size() != 0 && i < activeEnemies.size()){
+            if(activeEnemies.get(i).withinAttackRange(hero)){
+                if (!hero.isDamageState()) {
+                    hero.setHP(hero.getHP() - activeEnemies.get(i).getDamagePoints());
+                    hero.setDamageTime(getPApplet().millis());
+                    hero.setDamageState(true);
+                }
+            }
+            i++;
         }
     }
 }
