@@ -10,13 +10,12 @@ class Player extends Entity {
      * Creates a Player with a specified HP, AP, X/Y location and a type (Knight or Mage).
      *
      * @param health HP of the Player.
-     * @param attack AP/attack strength of the Player.
      * @param x X-coordinate of the Player.
      * @param y Y-coordinate of the Player.
      * @param type The type of player (Knight or Mage subclass).
      */
-    Player(int health, int attack, int x, int y, String type, int height, int width) {
-        super(x, y, 1, 7, height, width);
+    Player(int health, int x, int y, String type, int height, int width, int maxVelocity, String name, int damagePoints) {
+        super(x, y, 1, 7, height, width, maxVelocity, name, damagePoints);
         jumpCounter = 0;
     }
 

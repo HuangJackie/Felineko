@@ -19,8 +19,11 @@ class SpikeTile extends Tile {
      * @param hero The player object to decrease HP from.
      */
     void damageHP(Player hero) {
-        hero.setHP(hero.getHP()-damagePoints);
+        if (hero.getHP() - damagePoints < 0){
+            hero.setHP(0);
+        }else {
+            hero.setHP(hero.getHP() - damagePoints);
+        }
         hero.setDamageState(true);
-//        hero.setDamageTime();
     }
 }

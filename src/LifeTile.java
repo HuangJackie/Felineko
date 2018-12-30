@@ -28,7 +28,6 @@ class LifeTile extends Tile {
                 hero.setHP(hero.getHP() + recoverPoints);
             }
             active = false;
-            System.out.println(this.getType() + " " + this.getX() + " " + this.getY());
             this.setType("AIR");
             setChanged();
             notifyObservers();

@@ -20,20 +20,24 @@ abstract class Entity {
     static final String LEFT = "LEFT";
     private final int HEIGHT;
     private final int WIDTH;
+    private int damagePoints;
+    private final String NAME; //TODO should final constants be static?
 
-    Entity(int x, int y, int fallSpeed, int jumpSpeed, int height, int width){
+    Entity(int x, int y, int fallSpeed, int jumpSpeed, int height, int width, int maxVelocity, String name, int damagePoints){
         location = new PVector(x, y);
         this.fallSpeed = fallSpeed;
         this.FALLSPEED = fallSpeed;
         this.MAXFALLSPEED = 10;
         this.jumpSpeed = jumpSpeed;
         this.JUMPSPEED = jumpSpeed;
-        this.VELOCITY = 5;
+        this.VELOCITY = maxVelocity;
         this.velocity = 1;
         direction = RIGHT;
         HP = 100;
         HEIGHT = height;
         WIDTH = width;
+        this.damagePoints = damagePoints;
+        NAME = name;
     }
 
     void resetJumpSpeed(){
@@ -128,11 +132,19 @@ abstract class Entity {
         this.damageTime = damageTime;
     }
 
-    public int getHeight() {
+    int getHeight() {
         return HEIGHT;
     }
 
-    public int getWidth() {
+    int getWidth() {
         return WIDTH;
+    }
+
+    public String getName() {
+        return NAME;
+    }
+
+    public int getDamagePoints() {
+        return damagePoints;
     }
 }

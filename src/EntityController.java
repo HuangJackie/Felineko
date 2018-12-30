@@ -6,26 +6,32 @@ import processing.core.PImage;
  */
 class EntityController {
     private PApplet felineko;
+    private PImage sprite;
 
     /**
      * Creates a new EntityController to manage drawing and updating location.
      *
      * @param felineko the PApplet of the main sketch
      */
-    EntityController (PApplet felineko){
+    EntityController (PApplet felineko, Entity entity){
         this.felineko = felineko;
+        sprite = felineko.loadImage(entity.getName() + ".png");
+    }
+
+    void immunityUpdate(Entity entity){
+        if (getPApplet().millis() - entity.getDamageTime() > 1000) {
+            entity.setDamageState(false);
+        }
     }
 
     /**
      * Displaying the entity on screen.
      *
-     * @param name name of the entity sprite.
      * @param x horizontal coordinate.
      * @param y vertical coordinate.
      */
-    void drawEntity(String name, int x, int y){
-        PImage newSprite = felineko.loadImage(name + ".png");
-        felineko.image(newSprite, x, y);
+    void drawEntity(int x, int y){
+        felineko.image(sprite, x, y);
     }
 
     /**

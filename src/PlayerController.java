@@ -1,9 +1,25 @@
 import processing.core.PApplet;
+import processing.core.PImage;
 
 class PlayerController extends EntityController{
 
-    PlayerController (PApplet felineko){
-        super(felineko);
+    private int attackFrame;
+    private PApplet felineko;
+    private PImage[] attackSprite = new PImage[17];
+    private int skipFrame;
+
+    PlayerController (PApplet felineko, Player hero){
+        super(felineko, hero);
+        this.felineko = felineko;
+        attackFrame = 0;
+        skipFrame = 0;
+    }
+
+    void loadAttackSprites(Player hero){
+        for (int i = 0; i < attackSprite.length; i++){
+            //TODO make ATTACK static final variable.
+            attackSprite[i] = felineko.loadImage("HERO" + "ATTACK" + Integer.toString(i+1)+ ".png");
+        }
     }
 
     private boolean canJump(Map map, Player hero){
@@ -46,14 +62,31 @@ class PlayerController extends EntityController{
             }
         }else if (type.equals("LIFE")){
             ((LifeTile) tile).recoverHP(hero);
-//            map.setTile(new Tile("AIR", tile.getX(), tile.getY()));
         }
     }
 
-    void immunityUpdate(Player hero){
-        if (getPApplet().millis() - hero.getDamageTime() > 1000) {
-            hero.setDamageState(false);
+    boolean startedAttack(){
+        return attackFrame != 0;
+    }
+
+    void drawAttack(Player hero){
+        felineko.image(attackSprite[attackFrame], hero.getX(), hero.getY());
+        if(skipFrame == 0){
+            attackFrame++;
+        }
+        skipFrame++;
+        if(skipFrame == 2){
+            skipFrame = 0;
+        }
+        if (attackFrame >= attackSprite.length){
+            attackFrame = 0;
         }
     }
+
+    void initializeAttackFrame(){
+        attackFrame = 1;
+    }
+
+
 
 }

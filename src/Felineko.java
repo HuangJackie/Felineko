@@ -17,8 +17,7 @@ public class Felineko extends PApplet{
     private int gameScreen = 0;
     private Map map;
     private MapController mapController = new MapController(this);
-    private EntityController entityController = new EntityController(this);
-    private PlayerController playerController = new PlayerController(this);
+    private PlayerController playerController;
     private EnemyController enemyController;
     private Player hero;
     private Enemy snake;
@@ -34,6 +33,7 @@ public class Felineko extends PApplet{
      */
     public void settings(){
         size(600, 600);
+
         menuBackground = loadImage("MenuTwo.png");
         menuBackground.resize(600, 0);
         for (int i = 0; i < healthBar.length; i++){
@@ -49,9 +49,12 @@ public class Felineko extends PApplet{
         path = sketchPath(audioName);
         file = new SoundFile(this, path);
         ArrayList<Enemy> activeEnemies = new ArrayList<>();
-        snake = new Enemy(100, 210, 1, 7, 20, 30, 60);
+        snake = new Enemy(100, 210, 1, 7, 20, 30, 60, 2, "SNAKE");
+        hero = new Player(25,100, 100, "KNIGHT", 60, 30, 5, "HERO", 20);
         activeEnemies.add(snake);
-        enemyController = new EnemyController(this, activeEnemies);
+        playerController = new PlayerController(this, hero);
+        enemyController = new EnemyController(this, snake, activeEnemies);
+        playerController.loadAttackSprites(hero);
 //        file.play();
 //        file.loop();
     }
@@ -64,28 +67,28 @@ public class Felineko extends PApplet{
             case 0:
                 background(menuBackground);
                 if (mouseX >= 207 && mouseX <= 392 && mouseY >= 380 && mouseY <= 416 && mousePressed) {
-                    hero = new Player(25, 5, 100, 100, "KNIGHT", 60, 30);
                     gameScreen = 1;
                 }
                 break;
             case 1:
                 translate(translation.x+100, translation.y+150);
                 playerController.immunityUpdate(hero);
+                playerController.immunityUpdate(snake);
                 mapController.drawMap(map);
                 image(healthBar[hero.getHP()/10],-(translation.x + 100), -(translation.y + 150));
                 playerController.checkSpecialCollision(map, hero);
-                entityController.applyGravity(map, hero);
+                playerController.applyGravity(map, hero);
 
                 if (keys[1]) {
-                    entityController.moveLeft(map, hero);
+                    playerController.moveLeft(map, hero);
                 }
 
                 if (keys[0]) {
-                    entityController.moveRight(map, hero);
+                    playerController.moveRight(map, hero);
                 }
 
                 if (!(keys[1] || keys[0])){
-                    entityController.notMoving(map, hero);
+                    playerController.notMoving(map, hero);
                 }
 
                 if (keys[2]) {
@@ -94,9 +97,14 @@ public class Felineko extends PApplet{
                     playerController.notJumping(map, hero);
                 }
 
-                entityController.drawEntity("HERO", hero.getX(), hero.getY());
-                entityController.drawEntity("SNAKE", snake.getX(), snake.getY());
-                enemyController.updateLocation(map, snake);
+                if (playerController.startedAttack()){
+                    playerController.drawAttack(hero);
+                }else{
+                    playerController.drawEntity(hero.getX(), hero.getY());
+                }
+
+                enemyController.drawEnemies();
+                enemyController.updateLocation(map);
                 enemyController.attackPlayer(hero);
                 translation.x -= hero.getX()-prevPlayerPos.x;
                 translation.y -= hero.getY()-prevPlayerPos.y;
@@ -144,6 +152,8 @@ public class Felineko extends PApplet{
                 keys[3] = false;
             }
         } else if (key == 'z') {
+            playerController.initializeAttackFrame();
+            enemyController.attackEnemy(hero);
             keys[4] = false;
         } else if (key == ' ') {
             keys[5] = false;
