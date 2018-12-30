@@ -1,4 +1,4 @@
-public class Enemy extends Entity {
+class Enemy extends Entity {
 
     private boolean active;
 
@@ -47,7 +47,7 @@ public class Enemy extends Entity {
         active = false;
     }
 
-    public boolean isActive() {
+    boolean isActive() {
         return active;
     }
 }

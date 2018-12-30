@@ -21,6 +21,7 @@ public class Felineko extends PApplet{
     private EnemyController enemyController;
     private Player hero;
     private Enemy snake;
+    private Enemy snake2;
     private PVector translation = new PVector(0, 0);
     private PVector prevPlayerPos = new PVector(100, 100);
     private SoundFile file;
@@ -50,8 +51,10 @@ public class Felineko extends PApplet{
         file = new SoundFile(this, path);
         ArrayList<Enemy> activeEnemies = new ArrayList<>();
         snake = new Enemy(100, 210, 1, 7, 20, 30, 60, 2, "SNAKE");
+        snake2 = new Enemy(240, 540, 1, 7, 20, 30, 60, 2, "SNAKE");
         hero = new Player(25,100, 100, "KNIGHT", 60, 30, 5, "HERO", 20);
         activeEnemies.add(snake);
+        activeEnemies.add(snake2);
         playerController = new PlayerController(this, hero);
         enemyController = new EnemyController(this, snake, activeEnemies);
         playerController.loadAttackSprites(hero);
@@ -73,7 +76,7 @@ public class Felineko extends PApplet{
             case 1:
                 translate(translation.x+100, translation.y+150);
                 playerController.immunityUpdate(hero);
-                playerController.immunityUpdate(snake);
+                enemyController.immunityUpdateAll();
                 mapController.drawMap(map);
                 image(healthBar[hero.getHP()/10],-(translation.x + 100), -(translation.y + 150));
                 playerController.checkSpecialCollision(map, hero);
@@ -102,6 +105,7 @@ public class Felineko extends PApplet{
                 }else{
                     playerController.drawEntity(hero.getX(), hero.getY());
                 }
+                System.out.println(snake2.getHP());
 
                 enemyController.drawEnemies();
                 enemyController.updateLocation(map);

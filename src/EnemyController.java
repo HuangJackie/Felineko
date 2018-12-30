@@ -99,6 +99,13 @@ class EnemyController extends EntityController {
 
         for (Integer anInactive : inactive) {
             activeEnemies.remove((int)anInactive);
+            sprites.remove((int)anInactive);
+        }
+    }
+
+    void immunityUpdateAll(){
+        for (Enemy enemy : activeEnemies){
+            immunityUpdate(enemy);
         }
     }
 }

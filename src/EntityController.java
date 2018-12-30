@@ -45,7 +45,7 @@ class EntityController {
         entity.increFallSpeed();
 
         for (int i = 0; i<entity.getWidth(); i++) {
-            if (map.getTile((entity.getX()+i)/30, (entity.getY()+entity.getHeight())/30).getType().equals("GROUND")) {
+            if (map.getTile((entity.getX()+i)/30, (entity.getY()+entity.getHeight()-1)/30).getType().equals("GROUND")) {
                 entity.increYBy(-(entity.getY()+entity.getHeight())%30);
                 entity.resetFallSpeed();
                 entity.resetJumpSpeed();
