@@ -5,6 +5,7 @@ class Player extends Entity {
     private int jumpCounter;
     private boolean hasJumpedOnce;
     private boolean slidOff;
+    private int numCoin;
 
     /**
      * Creates a Player with a specified HP, AP, X/Y location and a type (Knight or Mage).
@@ -17,6 +18,7 @@ class Player extends Entity {
     Player(int health, int x, int y, String type, int height, int width, int maxVelocity, String name, int damagePoints) {
         super(x, y, 1, 7, height, width, maxVelocity, name, damagePoints);
         jumpCounter = 0;
+        numCoin = 0;
     }
 
     void setJumpCounter(int jumpCounter){
@@ -41,5 +43,13 @@ class Player extends Entity {
 
     void setSlidOff(boolean slidOff) {
         this.slidOff = slidOff;
+    }
+
+    void collectCoin() {
+        numCoin++;
+    }
+
+    public int getNumCoin() {
+        return numCoin;
     }
 }

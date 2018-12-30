@@ -26,6 +26,7 @@ public class Felineko extends PApplet{
     private PVector prevPlayerPos = new PVector(100, 100);
     private SoundFile file;
     private PImage[] healthBar = new PImage[11];
+    private PImage[] coinBar = new PImage[6];
     String audioName = "Felineko.wav";
     String path;
 
@@ -39,6 +40,9 @@ public class Felineko extends PApplet{
         menuBackground.resize(600, 0);
         for (int i = 0; i < healthBar.length; i++){
             healthBar[i] = loadImage(Integer.toString(i*10)+".png");
+        }
+        for (int i = 0; i < coinBar.length; i++){
+            coinBar[i] = loadImage("COIN" + Integer.toString(i)+".png");
         }
         map = mapController.setUpMap();
         mapController.loadMap(map);
@@ -78,7 +82,8 @@ public class Felineko extends PApplet{
                 playerController.immunityUpdate(hero);
                 enemyController.immunityUpdateAll();
                 mapController.drawMap(map);
-                image(healthBar[hero.getHP()/10],-(translation.x + 100), -(translation.y + 150));
+                image(healthBar[hero.getHP()/10], -(translation.x + 100), -(translation.y + 150));
+                image(coinBar[hero.getNumCoin()], -(translation.x - 470), -(translation.y + 150));
                 playerController.checkSpecialCollision(map, hero);
                 playerController.applyGravity(map, hero);
 
@@ -105,8 +110,6 @@ public class Felineko extends PApplet{
                 }else{
                     playerController.drawEntity(hero.getX(), hero.getY());
                 }
-                System.out.println(snake2.getHP());
-
                 enemyController.drawEnemies();
                 enemyController.updateLocation(map);
                 enemyController.attackPlayer(hero);

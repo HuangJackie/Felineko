@@ -86,7 +86,6 @@ class EnemyController extends EntityController {
             i++;
         }
         updateInactive();
-        System.out.println(activeEnemies.size());
     }
 
     private void updateInactive(){

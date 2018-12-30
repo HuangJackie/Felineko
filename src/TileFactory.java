@@ -9,6 +9,7 @@ class TileFactory {
     public static final String GROUND = "-14178020";
     public static final String SPIKE = "-196600";
     public static final String LIFE = "-46419";
+    public static final String FISHCOIN = "-3091968";
 
     /**
      * Creates various subclasses of the class Tile.
@@ -28,6 +29,8 @@ class TileFactory {
                 return new SpikeTile("SPIKE", x, y);
             case LIFE:
                 return new LifeTile("LIFE", x, y);
+            case FISHCOIN:
+                return new CoinTile("COIN", x, y);
             default:
                 return new Tile(type, x, y);
         }

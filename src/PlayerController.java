@@ -62,6 +62,8 @@ class PlayerController extends EntityController{
             }
         }else if (type.equals("LIFE")){
             ((LifeTile) tile).recoverHP(hero);
+        }else if (type.equals("COIN")){
+            ((CoinTile) tile).collect(hero);
         }
     }
 

@@ -77,7 +77,6 @@ class MapController implements Observer {
         Tile tile = (Tile) o;
         int x = tile.getX();
         int y = tile.getY();
-        System.out.println(map.getTile(x, y).getType() + " " + map.getTile(x, y).getX() + "  a " + map.getTile(x, y).getY());
         sprites[x][y] = felineko.loadImage(map.getTile(x, y).getType()+".png");
     }
 }
