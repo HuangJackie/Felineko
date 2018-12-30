@@ -50,4 +50,9 @@ class Tile extends Observable {
     String getType() {
         return type;
     }
+
+    @Override
+    public String toString() {
+        return type;
+    }
 }

@@ -1,7 +1,7 @@
 /**
  * Creates a Map of Tile Objects to be displayed on the gamescreen.
  */
-public class Map {
+class Map {
     private Tile[][] tileLocations;
     private int rows;
     private int columns;
@@ -13,18 +13,10 @@ public class Map {
      * @param columns number of columns in the tile map.
      */
     Map(int rows, int columns) {
-        this.tileLocations = new Tile[rows][columns];
+        System.out.println(rows + " " + columns);
+        this.tileLocations = new Tile[columns][rows];
         this.rows = rows;
         this.columns = columns;
-    }
-
-    /**
-     * Set the TileLocations in the Tile Map.
-     *
-     * @param tileLocations the tile locations.
-     */
-    public void setTileLocations(Tile[][] tileLocations) {
-        this.tileLocations = tileLocations;
     }
 
     /**

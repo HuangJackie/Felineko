@@ -55,15 +55,19 @@ class PlayerController extends EntityController{
 
     private void applyTileEffect(Tile tile, Player hero) {
         String type = tile.getType();
-        if (type.equals("SPIKE")){
-            if (!hero.isDamageState()) {
-                ((SpikeTile) tile).damageHP(hero);
-                hero.setDamageTime(getPApplet().millis());
-            }
-        }else if (type.equals("LIFE")){
-            ((LifeTile) tile).recoverHP(hero);
-        }else if (type.equals("COIN")){
-            ((CoinTile) tile).collect(hero);
+        switch (type) {
+            case "SPIKE":
+                if (!hero.isDamageState()) {
+                    ((SpikeTile) tile).damageHP(hero);
+                    hero.setDamageTime(getPApplet().millis());
+                }
+                break;
+            case "LIFE":
+                ((LifeTile) tile).recoverHP(hero);
+                break;
+            case "COIN":
+                ((CoinTile) tile).collect(hero);
+                break;
         }
     }
 
