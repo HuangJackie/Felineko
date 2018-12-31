@@ -4,6 +4,8 @@ import processing.core.PVector;
 import processing.sound.SoundFile;
 
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 /* Music created using https://www.beepbox.co/#6n31s0kbl00e05t7m0a7g0fj7i0r1o3210T0w1f3d1c4h0v0T0w1f1d1c3h0v2T0w2f1d1c0h0v3T2w1d1v0b4zgQ4x4h4h4h4h4h4h4h4h4z8N4h4h4h4x804h4h4h4p229IMMpFBcu6p_iCu3jmCBwFxMfR4QPRnknRdnmZgjZplcFEZZVRbCDTw9nPmQPPDeYPOg0F5gFDM5cu1V0swuhhpxNjdjCgYidd7i3g1daoUZ0q0Pjng6AcQFEYz19Fym6wOOt551B0
  * BeepBox website.
  */
@@ -11,7 +13,7 @@ import java.util.ArrayList;
 /**
  * A platformer game.
  */
-public class Felineko extends PApplet{
+public class Felineko extends PApplet implements Observer {
     private boolean[] keys = new boolean[6];
     private PImage menuBackground;
     private int gameScreen = 0;
@@ -56,10 +58,10 @@ public class Felineko extends PApplet{
         path = sketchPath(audioName);
         file = new SoundFile(this, path);
         ArrayList<Enemy> activeEnemies = new ArrayList<>();
-        snake = new Enemy(550, 1050, 1, 7, 20, 30, 60, 2, "SNAKE");
-        snake2 = new Enemy(820, 1050, 1, 7, 20, 30, 60, 2, "SNAKE");
-        snake3 = new Enemy(1110, 1200, 1, 7, 20, 30, 60, 2, "SNAKE");
-        snake4 = new Enemy(1110, 1020, 1, 7, 20, 30, 60, 2, "SNAKE");
+        snake = new Enemy(550, 1050, 1, 7, 20, 30, 60, 1, "SNAKE");
+        snake2 = new Enemy(820, 1050, 1, 7, 20, 30, 60, 1, "SNAKE");
+        snake3 = new Enemy(1110, 1200, 1, 7, 20, 30, 60, 1, "SNAKE");
+        snake4 = new Enemy(1110, 1020, 1, 7, 20, 30, 60, 1, "SNAKE");
         hero = new Player(25,400, 1680, "KNIGHT", 60, 30, 5, "HERO", 20);
 //        hero = new Player(25,250, 720, "KNIGHT", 60, 30, 5, "HERO", 20);
         activeEnemies.add(snake);
@@ -69,6 +71,7 @@ public class Felineko extends PApplet{
         playerController = new PlayerController(this, hero);
         enemyController = new EnemyController(this, snake, activeEnemies);
         playerController.loadAttackSprites(hero);
+        playerController.addObserver(this);
 //        file.play();
 //        file.loop();
     }
@@ -117,6 +120,7 @@ public class Felineko extends PApplet{
                 }else{
                     playerController.drawEntity(hero.getX(), hero.getY());
                 }
+
                 enemyController.drawEnemies();
                 enemyController.updateLocation(map);
                 enemyController.attackPlayer(hero);
@@ -178,5 +182,10 @@ public class Felineko extends PApplet{
         String[] processingArgs = {"Felineko"};
         Felineko felineko = new Felineko();
         PApplet.runSketch(processingArgs, felineko);
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        gameScreen = 0;
     }
 }
