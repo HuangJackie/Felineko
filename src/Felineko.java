@@ -22,6 +22,8 @@ public class Felineko extends PApplet{
     private Player hero;
     private Enemy snake;
     private Enemy snake2;
+    private Enemy snake3;
+    private Enemy snake4;
     private PVector translation = new PVector(0, 0);
     private PVector prevPlayerPos = new PVector(100, 100);
     private SoundFile file;
@@ -54,11 +56,16 @@ public class Felineko extends PApplet{
         path = sketchPath(audioName);
         file = new SoundFile(this, path);
         ArrayList<Enemy> activeEnemies = new ArrayList<>();
-        snake = new Enemy(100, 210, 1, 7, 20, 30, 60, 2, "SNAKE");
-        snake2 = new Enemy(240, 540, 1, 7, 20, 30, 60, 2, "SNAKE");
-        hero = new Player(25,100, 100, "KNIGHT", 60, 30, 5, "HERO", 20);
+        snake = new Enemy(550, 1050, 1, 7, 20, 30, 60, 2, "SNAKE");
+        snake2 = new Enemy(820, 1050, 1, 7, 20, 30, 60, 2, "SNAKE");
+        snake3 = new Enemy(1110, 1200, 1, 7, 20, 30, 60, 2, "SNAKE");
+        snake4 = new Enemy(1110, 1020, 1, 7, 20, 30, 60, 2, "SNAKE");
+        hero = new Player(25,400, 1680, "KNIGHT", 60, 30, 5, "HERO", 20);
+//        hero = new Player(25,250, 720, "KNIGHT", 60, 30, 5, "HERO", 20);
         activeEnemies.add(snake);
         activeEnemies.add(snake2);
+        activeEnemies.add(snake3);
+        activeEnemies.add(snake4);
         playerController = new PlayerController(this, hero);
         enemyController = new EnemyController(this, snake, activeEnemies);
         playerController.loadAttackSprites(hero);

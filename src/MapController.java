@@ -29,7 +29,7 @@ class MapController implements Observer {
      */
     Map setUpMap() {
         TileFactory tileFactory = new TileFactory();
-        PImage tileMap = felineko.loadImage("TileMap2.png");
+        PImage tileMap = felineko.loadImage("TileMap3.png");
         PVector dimensions = new PVector(tileMap.height, tileMap.width);
         Map newMap = new Map(tileMap.height, tileMap.width);
         for (int i = 0; i < dimensions.y; i++){
