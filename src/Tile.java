@@ -8,6 +8,7 @@ import java.util.Observable;
 class Tile extends Observable {
     private PVector position;
     private String type;
+    private boolean collidable;
 
     /**
      * Creates a Tile with a type "name" and a X/Y location.
@@ -16,9 +17,10 @@ class Tile extends Observable {
      * @param x X-coordinate of the tile.
      * @param y Y-coordinate of the tile.
      */
-    Tile(String type, int x, int y) {
+    Tile(String type, int x, int y, boolean collidable) {
         position = new PVector(x, y);
         this.type = type;
+        this.collidable = collidable;
     }
 
     /**
@@ -54,5 +56,13 @@ class Tile extends Observable {
     @Override
     public String toString() {
         return type;
+    }
+
+    boolean isCollidable() {
+        return collidable;
+    }
+
+    void setCollidable(boolean collidable){
+        this.collidable = collidable;
     }
 }

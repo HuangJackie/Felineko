@@ -1,10 +1,12 @@
 import processing.core.PApplet;
 import processing.core.PImage;
 
+import java.util.Observable;
+
 /**
  * An EntityController that manages the displaying/drawing of the Entity.
  */
-class EntityController {
+class EntityController extends Observable {
     private PApplet felineko;
     private PImage sprite;
 
@@ -45,7 +47,7 @@ class EntityController {
         entity.increFallSpeed();
 
         for (int i = 0; i<entity.getWidth(); i++) {
-            if (map.getTile((entity.getX()+i)/30, (entity.getY()+entity.getHeight()-1)/30).getType().equals("GROUND")) {
+            if (map.getTile((entity.getX()+i)/30, (entity.getY()+entity.getHeight()-1)/30).isCollidable()) {
                 entity.increYBy(-(entity.getY()+entity.getHeight())%30);
                 entity.resetFallSpeed();
                 entity.resetJumpSpeed();
@@ -55,7 +57,7 @@ class EntityController {
 
     boolean onGround(Map map, Entity entity){
         for (int i = 0; i<entity.getWidth(); i++) {
-            if (map.getTile((entity.getX()+i)/30, (entity.getY()+entity.getHeight())/30).getType().equals("GROUND")) {
+            if (map.getTile((entity.getX()+i)/30, (entity.getY()+entity.getHeight())/30).isCollidable()) {
                 return true;
             }
         }
@@ -76,7 +78,7 @@ class EntityController {
         }
 
         for (int i = 0; i<entity.getWidth(); i++){
-            if (map.getTile((entity.getX()+i)/30, (entity.getY())/30).getType().equals("GROUND")) {
+            if (map.getTile((entity.getX()+i)/30, (entity.getY())/30).isCollidable()) {
                 entity.increYBy(30-(entity.getY()+entity.getHeight())%30);
             }
         }
@@ -134,14 +136,14 @@ class EntityController {
         if (entity.getDirection().equals(Entity.LEFT)){
             entity.increXBy(-entity.getVelocity());
             for (int i = 0; i<entity.getHeight(); i++) {
-                if (map.getTile((entity.getX())/30, (entity.getY()+i)/30).getType().equals("GROUND")) {
+                if (map.getTile((entity.getX())/30, (entity.getY()+i)/30).isCollidable()) {
                     entity.increXBy(30-(entity.getX())%30);
                 }
             }
         }else {
             entity.increXBy(entity.getVelocity());
             for (int i = 0; i < entity.getHeight(); i++) {
-                if (map.getTile((entity.getX() + entity.getWidth()) / 30, (entity.getY() + i) / 30).getType().equals("GROUND")) {
+                if (map.getTile((entity.getX() + entity.getWidth()) / 30, (entity.getY() + i) / 30).isCollidable()) {
                     entity.increXBy(-(entity.getX() + entity.getWidth()) % 30);
                 }
             }

@@ -1,6 +1,8 @@
 import processing.core.PApplet;
 import processing.core.PImage;
 
+import java.util.ArrayList;
+
 class PlayerController extends EntityController{
 
     private int attackFrame;
@@ -48,12 +50,12 @@ class PlayerController extends EntityController{
 
     void checkSpecialCollision(Map map, Player hero) {
         for (int i = 0; i < hero.getHeight(); i+=29){
-            applyTileEffect(map.getTile(hero.getX()/30, (hero.getY()+i)/30), hero);
-            applyTileEffect(map.getTile((hero.getX()+hero.getWidth()-1)/30, (hero.getY()+i)/30), hero);
+            applyTileEffect(map, map.getTile(hero.getX()/30, (hero.getY()+i)/30), hero);
+            applyTileEffect(map, map.getTile((hero.getX()+hero.getWidth()-1)/30, (hero.getY()+i)/30), hero);
         }
     }
 
-    private void applyTileEffect(Tile tile, Player hero) {
+    private void applyTileEffect(Map map, Tile tile, Player hero) {
         String type = tile.getType();
         switch (type) {
             case "SPIKE":
@@ -67,6 +69,16 @@ class PlayerController extends EntityController{
                 break;
             case "COIN":
                 ((CoinTile) tile).collect(hero);
+                if (hero.allCollected()) {
+                    ArrayList<DoorTile> door = map.getDoor();
+                    for (DoorTile doorTile : door){
+                        doorTile.remove();
+                    }
+                }
+                break;
+            case "EXIT":
+                setChanged();
+                notifyObservers();
                 break;
         }
     }

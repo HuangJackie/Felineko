@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 /**
  * Creates a Map of Tile Objects to be displayed on the gamescreen.
  */
@@ -5,6 +7,7 @@ class Map {
     private Tile[][] tileLocations;
     private int rows;
     private int columns;
+    private ArrayList<DoorTile> doors = new ArrayList<>();
 
     /**
      * Creates a new Map with specified dimensions.
@@ -55,5 +58,13 @@ class Map {
      */
     Tile getTile(int x, int y){
         return tileLocations[x][y];
+    }
+
+    ArrayList<DoorTile> getDoor() {
+        return doors;
+    }
+
+    void setDoor(ArrayList<DoorTile> doors) {
+        this.doors = doors;
     }
 }

@@ -8,8 +8,8 @@ class SpikeTile extends Tile {
      * @param x    X-coordinate of the tile.
      * @param y    Y-coordinate of the tile.
      */
-    SpikeTile(String type, int x, int y) {
-        super(type, x, y);
+    SpikeTile(String type, int x, int y, boolean collidable) {
+        super(type, x, y, collidable);
         damagePoints = 10;
     }
 

@@ -52,4 +52,8 @@ class Player extends Entity {
     public int getNumCoin() {
         return numCoin;
     }
+
+    public boolean allCollected() {
+        return numCoin == 5;
+    }
 }

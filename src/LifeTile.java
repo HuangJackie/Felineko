@@ -9,8 +9,8 @@ class LifeTile extends Tile {
      * @param x    X-coordinate of the tile.
      * @param y    Y-coordinate of the tile.
      */
-    LifeTile(String type, int x, int y) {
-        super(type, x, y);
+    LifeTile(String type, int x, int y, boolean collidable) {
+        super(type, x, y, collidable);
         recoverPoints = 40;
         active = true;
     }

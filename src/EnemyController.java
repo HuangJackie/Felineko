@@ -36,8 +36,8 @@ class EnemyController extends EntityController {
             String direction = activeEnemy.getDirection();
             boolean leftEdge = map.getTile(x / 30, (y + activeEnemy.getHeight()) / 30).getType().equals("AIR") && direction.equals(Entity.LEFT);
             boolean rightEdge = map.getTile((x + activeEnemy.getWidth()) / 30, (y + activeEnemy.getHeight()) / 30).getType().equals("AIR") && direction.equals(Entity.RIGHT);
-            boolean leftWall = map.getTile((x - 1) / 30, y / 30).getType().equals("GROUND") && direction.equals(Entity.LEFT);
-            boolean rightWall = map.getTile((x + activeEnemy.getWidth() + 1) / 30, y / 30).getType().equals("GROUND") && direction.equals(Entity.RIGHT);
+            boolean leftWall = map.getTile((x - 1) / 30, y / 30).isCollidable() && direction.equals(Entity.LEFT);
+            boolean rightWall = map.getTile((x + activeEnemy.getWidth() + 1) / 30, y / 30).isCollidable() && direction.equals(Entity.RIGHT);
 
             if (direction.equals(Entity.LEFT)) {
                 moveLeft(map, activeEnemy);

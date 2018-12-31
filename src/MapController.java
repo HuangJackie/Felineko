@@ -2,6 +2,7 @@ import processing.core.PApplet;
 import processing.core.PImage;
 import processing.core.PVector;
 
+import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -17,9 +18,11 @@ class MapController implements Observer {
     private PImage[][] sprites;
 
     private Map map;
+    private final PVector[] doorLocation = new PVector[3];
 
     MapController(PApplet felineko){
         this.felineko = felineko;
+//        doorLocation[0] = new PVector()
     }
 
     /**
@@ -29,18 +32,22 @@ class MapController implements Observer {
      */
     Map setUpMap() {
         TileFactory tileFactory = new TileFactory();
-        PImage tileMap = felineko.loadImage("TileMap3.png");
+        PImage tileMap = felineko.loadImage("TileMap.png");
         PVector dimensions = new PVector(tileMap.height, tileMap.width);
         Map newMap = new Map(tileMap.height, tileMap.width);
+        ArrayList<DoorTile> doors = new ArrayList<>();
         for (int i = 0; i < dimensions.y; i++){
             for (int j = 0; j < dimensions.x; j++) {
                 String type = Integer.toString(tileMap.get(i, j));
                 Tile newTile = tileFactory.createTile(type, i, j);
                 newMap.setTile(newTile);
                 newTile.addObserver(this);
-                System.out.println(type);
+                if (newTile.getType().equals("DOOR")){
+                    doors.add((DoorTile) newTile);
+                }
             }
         }
+        newMap.setDoor(doors);
         this.map = newMap;
         return newMap;
     }
@@ -55,7 +62,6 @@ class MapController implements Observer {
         for (int i = 0; i < map.getColumns(); i++){
             for (int j = 0; j < map.getRows(); j++) {
                 sprites[i][j] = felineko.loadImage(map.getTile(i, j).getType()+".png");
-                sprites[i][j].resize(100,0);
             }
         }
     }
@@ -71,6 +77,10 @@ class MapController implements Observer {
                 felineko.image(sprites[i][j], i*30, j*30);
             }
         }
+    }
+
+    public void removeDoor(){
+
     }
 
     @Override
