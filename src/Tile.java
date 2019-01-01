@@ -1,14 +1,16 @@
 import processing.core.PVector;
 
+import java.io.Serializable;
 import java.util.Observable;
 
 /**
  * Creates a Tile object that invokes special properties/actions on the Player object.
  */
-class Tile extends Observable {
+class Tile extends Observable implements Serializable {
     private PVector position;
     private String type;
     private boolean collidable;
+    static final long serialVersionUID = 6469620024832591618L;
 
     /**
      * Creates a Tile with a type "name" and a X/Y location.
