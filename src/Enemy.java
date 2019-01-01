@@ -8,15 +8,15 @@ class Enemy extends Entity {
     }
 
 
-    void changeDirection(){
-        if (this.getDirection().equals(Entity.RIGHT)){
+    void changeDirection() {
+        if (this.getDirection().equals(Entity.RIGHT)) {
             this.setDirection(Entity.LEFT);
-        }else{
+        } else {
             this.setDirection(Entity.RIGHT);
         }
     }
 
-    boolean withinAttackRange(Player hero){
+    boolean withinAttackRange(Player hero) {
         int xHeroLeft = hero.getX();
         int xHeroRight = hero.getX() + hero.getWidth();
         int yHeroBottom = hero.getY() + hero.getHeight() - 1;
@@ -25,16 +25,31 @@ class Enemy extends Entity {
         return leftCollide || rightCollide;
     }
 
-    boolean withinAttackedRangeRight(Player hero){
-        int xHeroLeft = hero.getX() + hero.getWidth();
-        int xHeroRight = hero.getX() + hero.getWidth() + 45;
-        int yHeroBottom = hero.getY() + hero.getHeight() - 10;
-        int yHeroTop = hero.getY() - 20;
+    boolean withinAttackedRangeRight(Player hero) {
+        int xHeroLeft;
+        int xHeroRight;
+        int yHeroBottom;
+        int yHeroTop;
 
-        int xEnemyLeft = getX();
-        int yEnemyBottom = getY() + getHeight();
-        int xEnemyRight = getX() + getWidth();
-        int yEnemyTop = getY();
+        int xEnemyLeft;
+        int yEnemyBottom;
+        int xEnemyRight;
+        int yEnemyTop;
+
+        if (hero.getDirection().equals(Entity.RIGHT)) {
+            xHeroLeft = hero.getX() + hero.getWidth();
+            xHeroRight = hero.getX() + hero.getWidth() + 45;
+        } else {
+            xHeroLeft = hero.getX() + hero.getWidth() - 75;
+            xHeroRight = hero.getX() + hero.getWidth() + 45 - 75;
+        }
+        yHeroBottom = hero.getY() + hero.getHeight() - 10;
+        yHeroTop = hero.getY() - 20;
+
+        xEnemyLeft = getX();
+        yEnemyBottom = getY() + getHeight();
+        xEnemyRight = getX() + getWidth();
+        yEnemyTop = getY();
 
         boolean leftTopCollide = (xHeroLeft < xEnemyLeft && xEnemyLeft < xHeroRight) && (yHeroTop < yEnemyTop && yEnemyTop < yHeroBottom);
         boolean leftBottomCollide = (xHeroLeft < xEnemyLeft && xEnemyLeft < xHeroRight) && (yHeroTop < yEnemyBottom && yEnemyBottom < yHeroBottom);
@@ -43,7 +58,7 @@ class Enemy extends Entity {
         return leftTopCollide || leftBottomCollide || rightTopCollide || rightBottomCollide;
     }
 
-    void setInactive(){
+    void setInactive() {
         active = false;
     }
 
