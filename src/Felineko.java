@@ -16,6 +16,8 @@ import java.util.Observer;
 public class Felineko extends PApplet implements Observer {
     private boolean[] keys = new boolean[6];
     private PImage menuBackground;
+    private PImage menuWin;
+    private PImage menuLose;
     private int gameScreen = 0;
     private Map map;
     private MapController mapController = new MapController(this);
@@ -31,6 +33,7 @@ public class Felineko extends PApplet implements Observer {
     private SoundFile file;
     private PImage[] healthBar = new PImage[11];
     private PImage[] coinBar = new PImage[6];
+    private boolean win;
     String audioName = "Felineko.wav";
     String path;
 
@@ -41,6 +44,8 @@ public class Felineko extends PApplet implements Observer {
         size(600, 600);
 
         menuBackground = loadImage("MenuTwo.png");
+        menuWin = loadImage("WINMENU.png");
+        menuLose = loadImage("LOSEMENU.png");
         menuBackground.resize(600, 0);
         for (int i = 0; i < healthBar.length; i++){
             healthBar[i] = loadImage(Integer.toString(i*10)+".png");
@@ -74,6 +79,10 @@ public class Felineko extends PApplet implements Observer {
         playerController.addObserver(this);
 //        file.play();
 //        file.loop();
+    }
+
+    private void resetGame(){
+
     }
 
     /**
@@ -121,6 +130,10 @@ public class Felineko extends PApplet implements Observer {
                     playerController.drawEntity(hero.getX(), hero.getY());
                 }
 
+                if(hero.getHP() == 0){
+                    gameScreen = 2;
+                }
+
                 enemyController.drawEnemies();
                 enemyController.updateLocation(map);
                 enemyController.attackPlayer(hero);
@@ -128,6 +141,16 @@ public class Felineko extends PApplet implements Observer {
                 translation.y -= hero.getY()-prevPlayerPos.y;
                 prevPlayerPos.x = hero.getX();
                 prevPlayerPos.y = hero.getY();
+                break;
+            case 2:
+                if (keys[5]){
+                    gameScreen = 0;
+                }
+                if (win){
+                    background(menuWin);
+                } else {
+                    background(menuLose);
+                }
                 break;
         }
     }
@@ -186,6 +209,7 @@ public class Felineko extends PApplet implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-        gameScreen = 0;
+        gameScreen = 2;
+        win = true;
     }
 }
