@@ -16,6 +16,7 @@ import java.util.Observer;
  */
 public class Felineko extends PApplet implements Observer {
     private boolean[] keys = new boolean[7];
+    private PImage menuBackgroundHasSave;
     private PImage menuBackground;
     private PImage menuWin;
     private PImage menuLose;
@@ -36,13 +37,14 @@ public class Felineko extends PApplet implements Observer {
     private PImage[] coinBar = new PImage[6];
     private PImage pause;
     private boolean win;
+    private boolean fileExists;
     String audioName = "Felineko.wav";
     String path;
 
     /**
      * Preset settings of the game.
      */
-    public void settings(){
+    public void settings() {
         size(600, 600);
 
         menuBackground = loadImage("MenuTwo.png");
@@ -50,14 +52,16 @@ public class Felineko extends PApplet implements Observer {
         menuLose = loadImage("LOSEMENU.png");
         menuInstructions = loadImage("Instructions.png");
         menuPause = loadImage("PAUSEMENU.png");
+        menuBackgroundHasSave = loadImage("MenuOne.png");
         menuBackground.resize(600, 0);
         menuInstructions.resize(600, 0);
         menuPause.resize(600, 0);
-        for (int i = 0; i < healthBar.length; i++){
-            healthBar[i] = loadImage(Integer.toString(i*10)+".png");
+        menuBackgroundHasSave.resize(600, 0);
+        for (int i = 0; i < healthBar.length; i++) {
+            healthBar[i] = loadImage(Integer.toString(i * 10) + ".png");
         }
-        for (int i = 0; i < coinBar.length; i++){
-            coinBar[i] = loadImage("COIN" + Integer.toString(i)+".png");
+        for (int i = 0; i < coinBar.length; i++) {
+            coinBar[i] = loadImage("COIN" + Integer.toString(i) + ".png");
         }
         pause = loadImage("PAUSE.png");
         menuPause.resize(600, 0);
@@ -67,43 +71,103 @@ public class Felineko extends PApplet implements Observer {
 //        file.loop();
     }
 
-    private void resetGame(){
+    private void resetGame() {
         map = mapController.setUpMap();
         mapController.loadMap(map);
+        mapController.addObservers();
 
         activeEnemies = enemyFactory.instantiateEnemies();
 
         enemyController = new EnemyController(this, activeEnemies);
         enemyController.setUpSprite();
-        hero = new Player(25,400, 1680, "KNIGHT", 60, 30, 5, "HERO", 20);
+        hero = new Player(25, 400, 1680, "KNIGHT", 60, 30, 5, "HERO", 20);
         playerController = new PlayerController(this, hero);
         playerController.setUpSprite();
         playerController.addObserver(this);
     }
 
+    private void loadGame() {
+        try {
+            FileInputStream fileIn = new FileInputStream("hero.ser");
+            ObjectInputStream objectIn = new ObjectInputStream(fileIn);
+
+            hero = (Player) objectIn.readObject();
+            objectIn.close();
+
+            fileIn = new FileInputStream("map.ser");
+            objectIn = new ObjectInputStream(fileIn);
+
+            map = (Map) objectIn.readObject();
+            objectIn.close();
+
+            fileIn = new FileInputStream("activeEnemies.ser");
+            objectIn = new ObjectInputStream(fileIn);
+
+            activeEnemies = (ArrayList<Enemy>) objectIn.readObject();
+            objectIn.close();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        mapController.loadMap(map);
+        mapController.setMap(map);
+        mapController.addObservers();
+
+        enemyController = new EnemyController(this, activeEnemies);
+        enemyController.setUpSprite();
+        playerController = new PlayerController(this, hero);
+        playerController.setUpSprite();
+        playerController.addObserver(this);
+    }
+
+    private void eraseGame() {
+        try {
+            FileOutputStream fileOut = new FileOutputStream("hero.ser");
+            ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
+            objectOut.close();
+
+            fileOut = new FileOutputStream("map.ser");
+            objectOut = new ObjectOutputStream(fileOut);
+            objectOut.close();
+
+            fileOut = new FileOutputStream("activeEnemies.ser");
+            objectOut = new ObjectOutputStream(fileOut);
+            objectOut.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * Updates the screen.
      */
-    public void draw(){
+    public void draw() {
         switch (gameScreen) {
             case 0:
-                background(menuBackground);
+                checkExists();
+                if (fileExists) {
+                    background(menuBackgroundHasSave);
+                    if (mouseX >= 220 && mouseX <= 377 && mouseY >= 319 && mouseY <= 353 && mousePressed) {
+                        gameScreen = 1;
+                        loadGame();
+                    }
+                } else {
+                    background(menuBackground);
+                }
                 if (mouseX >= 207 && mouseX <= 392 && mouseY >= 380 && mouseY <= 416 && mousePressed) {
                     gameScreen = 1;
                     resetGame();
-                } else if (mouseX >= 164 && mouseX <= 430 && mouseY >= 445 && mouseY <= 479 && mousePressed){
+                } else if (mouseX >= 164 && mouseX <= 430 && mouseY >= 445 && mouseY <= 479 && mousePressed) {
                     gameScreen = 3;
-                } else if (mouseX >= 220 && mouseX <= 377 && mouseY >= 319 && mouseY <= 353 && mousePressed){
-                    gameScreen = 1;
-                    loadGame();
-                }
-                break;
+                } else
+                    break;
             case 1:
-                translate(translation.x+100, translation.y+150);
+                translate(translation.x + 100, translation.y + 150);
                 playerController.immunityUpdate(hero);
                 enemyController.immunityUpdateAll();
                 mapController.drawMap(map);
-                image(healthBar[hero.getHP()/10], -(translation.x + 100), -(translation.y + 150));
+                image(healthBar[hero.getHP() / 10], -(translation.x + 100), -(translation.y + 150));
                 image(coinBar[hero.getNumCoin()], -(translation.x - 440), -(translation.y + 150));
                 image(pause, -(translation.x - 470), -(translation.y + 150));
                 playerController.checkSpecialCollision(map);
@@ -117,7 +181,7 @@ public class Felineko extends PApplet implements Observer {
                     playerController.moveRight(map, hero);
                 }
 
-                if (!(keys[1] || keys[0])){
+                if (!(keys[1] || keys[0])) {
                     playerController.notMoving(map, hero);
                 }
 
@@ -127,33 +191,35 @@ public class Felineko extends PApplet implements Observer {
                     playerController.notJumping(map);
                 }
 
-                if (playerController.startedAttack()){
+                if (playerController.startedAttack()) {
                     playerController.drawAttack();
-                }else{
+                } else {
                     playerController.drawEntity();
                 }
 
-                if(hero.getHP() == 0){
+                if (hero.getHP() == 0) {
                     gameScreen = 2;
                 }
 
                 enemyController.drawEntity();
                 enemyController.updateLocation(map);
                 enemyController.attackPlayer(hero);
-                translation.x -= hero.getX()-prevPlayerPos.x;
-                translation.y -= hero.getY()-prevPlayerPos.y;
+                translation.x -= hero.getX() - prevPlayerPos.x;
+                translation.y -= hero.getY() - prevPlayerPos.y;
                 prevPlayerPos.x = hero.getX();
                 prevPlayerPos.y = hero.getY();
 
-                if ((mouseX >= 570 && mouseX <= 600 && mouseY >= 0 && mouseY <= 30 && mousePressed) || keys[6])  {
+                if ((mouseX >= 570 && mouseX <= 600 && mouseY >= 0 && mouseY <= 30 && mousePressed) || keys[6]) {
                     gameScreen = 4;
+                    saveGame();
                 }
                 break;
             case 2:
-                if (keys[5]){
+                if (keys[5]) {
                     gameScreen = 0;
+                    eraseGame();
                 }
-                if (win){
+                if (win) {
                     background(menuWin);
                 } else {
                     background(menuLose);
@@ -161,19 +227,70 @@ public class Felineko extends PApplet implements Observer {
                 break;
             case 3:
                 background(menuInstructions);
-                if (mouseX >= 478 && mouseX <= 513 && mouseY >= 94 && mouseY <= 109 && mousePressed){
+                if (mouseX >= 478 && mouseX <= 513 && mouseY >= 94 && mouseY <= 109 && mousePressed) {
                     gameScreen = 0;
                 }
             case 4:
                 background(menuPause);
-                if (keys[5]){
+                if (keys[5]) {
                     gameScreen = 0;
                 }
-                if (mouseX >= 486 && mouseX <= 537 && mouseY >= 146 && mouseY <= 167 && mousePressed){
+                if (mouseX >= 486 && mouseX <= 537 && mouseY >= 146 && mouseY <= 167 && mousePressed) {
                     gameScreen = 1;
                 }
-                saveGame();
                 break;
+        }
+    }
+
+    @Override
+    public void exit() {
+        if (gameScreen == 1) {
+            saveGame();
+        }
+        super.exit();
+    }
+
+    private void checkExists() {
+        try {
+
+            FileInputStream fileIn = new FileInputStream("hero.ser");
+            ObjectInputStream objectIn = new ObjectInputStream(fileIn);
+
+            hero = (Player) objectIn.readObject();
+            objectIn.close();
+            fileExists = true;
+        } catch (EOFException e) {
+            fileExists = false;
+        } catch (FileNotFoundException e) {
+            eraseGame();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    private void saveGame() {
+        try {
+            FileOutputStream fileOut = new FileOutputStream("hero.ser");
+            ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
+
+            objectOut.writeObject(hero);
+            objectOut.close();
+
+            fileOut = new FileOutputStream("map.ser");
+            objectOut = new ObjectOutputStream(fileOut);
+
+            objectOut.writeObject(map);
+            objectOut.close();
+
+            fileOut = new FileOutputStream("activeEnemies.ser");
+            objectOut = new ObjectOutputStream(fileOut);
+
+            objectOut.writeObject(activeEnemies);
+            objectOut.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -210,7 +327,7 @@ public class Felineko extends PApplet implements Observer {
             } else if (keyCode == LEFT) {
                 keys[1] = false;
             } else if (keyCode == UP) {
-                hero.setJumpCounter(hero.getJumpCounter()+1);
+                hero.setJumpCounter(hero.getJumpCounter() + 1);
                 hero.resetJumpSpeed();
                 keys[2] = false;
             } else if (keyCode == DOWN) {
@@ -222,12 +339,12 @@ public class Felineko extends PApplet implements Observer {
             keys[4] = false;
         } else if (key == ' ') {
             keys[5] = false;
-        } else if (key == 'p'){
+        } else if (key == 'p') {
             keys[6] = false;
         }
     }
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
         String[] processingArgs = {"Felineko"};
         Felineko felineko = new Felineko();
         PApplet.runSketch(processingArgs, felineko);
