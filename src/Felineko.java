@@ -3,6 +3,7 @@ import processing.core.PImage;
 import processing.core.PVector;
 import processing.sound.SoundFile;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
@@ -14,12 +15,15 @@ import java.util.Observer;
  * A platformer game.
  */
 public class Felineko extends PApplet implements Observer {
-    private boolean[] keys = new boolean[6];
+    private boolean[] keys = new boolean[7];
     private PImage menuBackground;
     private PImage menuWin;
     private PImage menuLose;
+    private PImage menuInstructions;
+    private PImage menuPause;
     private int gameScreen = 0;
     private Map map;
+    private ArrayList<Enemy> activeEnemies;
     private MapController mapController = new MapController(this);
     private PlayerController playerController;
     private EnemyController enemyController;
@@ -30,8 +34,8 @@ public class Felineko extends PApplet implements Observer {
     private SoundFile file;
     private PImage[] healthBar = new PImage[11];
     private PImage[] coinBar = new PImage[6];
+    private PImage pause;
     private boolean win;
-    private ArrayList<Enemy> activeEnemies;
     String audioName = "Felineko.wav";
     String path;
 
@@ -44,13 +48,19 @@ public class Felineko extends PApplet implements Observer {
         menuBackground = loadImage("MenuTwo.png");
         menuWin = loadImage("WINMENU.png");
         menuLose = loadImage("LOSEMENU.png");
+        menuInstructions = loadImage("Instructions.png");
+        menuPause = loadImage("PAUSEMENU.png");
         menuBackground.resize(600, 0);
+        menuInstructions.resize(600, 0);
+        menuPause.resize(600, 0);
         for (int i = 0; i < healthBar.length; i++){
             healthBar[i] = loadImage(Integer.toString(i*10)+".png");
         }
         for (int i = 0; i < coinBar.length; i++){
             coinBar[i] = loadImage("COIN" + Integer.toString(i)+".png");
         }
+        pause = loadImage("PAUSE.png");
+        menuPause.resize(600, 0);
         path = sketchPath(audioName);
         file = new SoundFile(this, path);
 //        file.play();
@@ -81,6 +91,11 @@ public class Felineko extends PApplet implements Observer {
                 if (mouseX >= 207 && mouseX <= 392 && mouseY >= 380 && mouseY <= 416 && mousePressed) {
                     gameScreen = 1;
                     resetGame();
+                } else if (mouseX >= 164 && mouseX <= 430 && mouseY >= 445 && mouseY <= 479 && mousePressed){
+                    gameScreen = 3;
+                } else if (mouseX >= 220 && mouseX <= 377 && mouseY >= 319 && mouseY <= 353 && mousePressed){
+                    gameScreen = 1;
+                    loadGame();
                 }
                 break;
             case 1:
@@ -89,7 +104,8 @@ public class Felineko extends PApplet implements Observer {
                 enemyController.immunityUpdateAll();
                 mapController.drawMap(map);
                 image(healthBar[hero.getHP()/10], -(translation.x + 100), -(translation.y + 150));
-                image(coinBar[hero.getNumCoin()], -(translation.x - 470), -(translation.y + 150));
+                image(coinBar[hero.getNumCoin()], -(translation.x - 440), -(translation.y + 150));
+                image(pause, -(translation.x - 470), -(translation.y + 150));
                 playerController.checkSpecialCollision(map);
                 playerController.applyGravity(map, hero);
 
@@ -128,6 +144,10 @@ public class Felineko extends PApplet implements Observer {
                 translation.y -= hero.getY()-prevPlayerPos.y;
                 prevPlayerPos.x = hero.getX();
                 prevPlayerPos.y = hero.getY();
+
+                if ((mouseX >= 570 && mouseX <= 600 && mouseY >= 0 && mouseY <= 30 && mousePressed) || keys[6])  {
+                    gameScreen = 4;
+                }
                 break;
             case 2:
                 if (keys[5]){
@@ -138,6 +158,21 @@ public class Felineko extends PApplet implements Observer {
                 } else {
                     background(menuLose);
                 }
+                break;
+            case 3:
+                background(menuInstructions);
+                if (mouseX >= 478 && mouseX <= 513 && mouseY >= 94 && mouseY <= 109 && mousePressed){
+                    gameScreen = 0;
+                }
+            case 4:
+                background(menuPause);
+                if (keys[5]){
+                    gameScreen = 0;
+                }
+                if (mouseX >= 486 && mouseX <= 537 && mouseY >= 146 && mouseY <= 167 && mousePressed){
+                    gameScreen = 1;
+                }
+                saveGame();
                 break;
         }
     }
@@ -160,6 +195,8 @@ public class Felineko extends PApplet implements Observer {
             keys[4] = true;
         } else if (key == ' ') {
             keys[5] = true;
+        } else if (key == 'p') {
+            keys[6] = true;
         }
     }
 
@@ -185,6 +222,8 @@ public class Felineko extends PApplet implements Observer {
             keys[4] = false;
         } else if (key == ' ') {
             keys[5] = false;
+        } else if (key == 'p'){
+            keys[6] = false;
         }
     }
 
