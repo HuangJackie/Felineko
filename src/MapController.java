@@ -17,12 +17,10 @@ class MapController implements Observer {
      */
     private PImage[][] sprites;
 
-    private Map map;
-    private final PVector[] doorLocation = new PVector[3];
+    private Map map = new Map(0,0);
 
-    MapController(PApplet felineko){
+    MapController(PApplet felineko) {
         this.felineko = felineko;
-//        doorLocation[0] = new PVector()
     }
 
     /**
@@ -36,20 +34,34 @@ class MapController implements Observer {
         PVector dimensions = new PVector(tileMap.height, tileMap.width);
         Map newMap = new Map(tileMap.height, tileMap.width);
         ArrayList<DoorTile> doors = new ArrayList<>();
-        for (int i = 0; i < dimensions.y; i++){
+        for (int i = 0; i < dimensions.y; i++) {
             for (int j = 0; j < dimensions.x; j++) {
                 String type = Integer.toString(tileMap.get(i, j));
                 Tile newTile = tileFactory.createTile(type, i, j);
                 newMap.setTile(newTile);
-                newTile.addObserver(this);
-                if (newTile.getType().equals("DOOR")){
+                if (newTile.getType().equals("DOOR")) {
                     doors.add((DoorTile) newTile);
                 }
             }
         }
         newMap.setDoor(doors);
-        this.map = newMap;
+//        this.map = newMap;
+        if(sprites == null) {
+            sprites = new PImage[newMap.getColumns()][newMap.getRows()];
+        }
         return newMap;
+    }
+
+//    void setMap(Map map) {
+//        this.map = map;
+//    }
+
+    void addObservers() {
+        for (int i = 0; i < map.getColumns(); i++) {
+            for (int j = 0; j < map.getRows(); j++) {
+                map.getTile(i, j).addObserver(this);
+            }
+        }
     }
 
     /**
@@ -57,13 +69,17 @@ class MapController implements Observer {
      *
      * @param map Map with sprite locations.
      */
-    void loadMap(Map map){
-        sprites = new PImage[map.getColumns()][map.getRows()];
-        for (int i = 0; i < map.getColumns(); i++){
+    void loadMap(Map map) {
+        Tile[][] oldTiles = this.map.getTiles();
+        Tile[][] newTiles = map.getTiles();
+        for (int i = 0; i < map.getColumns(); i++) {
             for (int j = 0; j < map.getRows(); j++) {
-                sprites[i][j] = felineko.loadImage(map.getTile(i, j).getType()+".png");
+                if (sprites[i][j] == null || !oldTiles[i][j].getType().equals(newTiles[i][j].getType())) {
+                    sprites[i][j] = felineko.loadImage(map.getTile(i, j).getType() + ".png");
+                }
             }
         }
+        this.map = map;
     }
 
     /**
@@ -71,16 +87,12 @@ class MapController implements Observer {
      *
      * @param map Map with sprite Locations.
      */
-    void drawMap(Map map){
-        for (int i = 0; i < map.getColumns(); i++){
+    void drawMap(Map map) {
+        for (int i = 0; i < map.getColumns(); i++) {
             for (int j = 0; j < map.getRows(); j++) {
-                felineko.image(sprites[i][j], i*30, j*30);
+                felineko.image(sprites[i][j], i * 30, j * 30);
             }
         }
-    }
-
-    public void removeDoor(){
-
     }
 
     @Override
@@ -88,6 +100,6 @@ class MapController implements Observer {
         Tile tile = (Tile) o;
         int x = tile.getX();
         int y = tile.getY();
-        sprites[x][y] = felineko.loadImage(map.getTile(x, y).getType()+".png");
+        sprites[x][y] = felineko.loadImage(map.getTile(x, y).getType() + ".png");
     }
 }
