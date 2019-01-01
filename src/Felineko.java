@@ -31,6 +31,7 @@ public class Felineko extends PApplet implements Observer {
     private PImage[] healthBar = new PImage[11];
     private PImage[] coinBar = new PImage[6];
     private boolean win;
+    private ArrayList<Enemy> activeEnemies;
     String audioName = "Felineko.wav";
     String path;
 
@@ -50,24 +51,24 @@ public class Felineko extends PApplet implements Observer {
         for (int i = 0; i < coinBar.length; i++){
             coinBar[i] = loadImage("COIN" + Integer.toString(i)+".png");
         }
-        map = mapController.setUpMap();
-        mapController.loadMap(map);
         path = sketchPath(audioName);
         file = new SoundFile(this, path);
-        ArrayList<Enemy> activeEnemies;
-        hero = new Player(25,400, 1680, "KNIGHT", 60, 30, 5, "HERO", 20);
-        activeEnemies = enemyFactory.instantiateEnemies();
-        playerController = new PlayerController(this, hero);
-        enemyController = new EnemyController(this, activeEnemies);
-        enemyController.setUpSprite();
-        playerController.addObserver(this);
-        playerController.setUpSprite();
 //        file.play();
 //        file.loop();
     }
 
     private void resetGame(){
+        map = mapController.setUpMap();
+        mapController.loadMap(map);
 
+        activeEnemies = enemyFactory.instantiateEnemies();
+
+        enemyController = new EnemyController(this, activeEnemies);
+        enemyController.setUpSprite();
+        hero = new Player(25,400, 1680, "KNIGHT", 60, 30, 5, "HERO", 20);
+        playerController = new PlayerController(this, hero);
+        playerController.setUpSprite();
+        playerController.addObserver(this);
     }
 
     /**
@@ -79,6 +80,7 @@ public class Felineko extends PApplet implements Observer {
                 background(menuBackground);
                 if (mouseX >= 207 && mouseX <= 392 && mouseY >= 380 && mouseY <= 416 && mousePressed) {
                     gameScreen = 1;
+                    resetGame();
                 }
                 break;
             case 1:
