@@ -1,9 +1,11 @@
 import processing.core.PVector;
 
+import java.io.Serializable;
+
 /**
  * A Player or Enemy Entity in the game.
  */
-abstract class Entity {
+abstract class Entity implements Serializable {
     private PVector location;
     private float fallSpeed;
     private final float FALLSPEED;
@@ -22,6 +24,7 @@ abstract class Entity {
     private final int WIDTH;
     private int damagePoints;
     private final String NAME; //TODO should final constants be static?
+    static final long serialVersionUID = 6469620024877791618L;
 
     Entity(int x, int y, int fallSpeed, int jumpSpeed, int height, int width, int maxVelocity, String name, int damagePoints){
         location = new PVector(x, y);

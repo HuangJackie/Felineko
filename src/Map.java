@@ -1,13 +1,15 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Creates a Map of Tile Objects to be displayed on the gamescreen.
  */
-class Map {
+class Map implements Serializable {
     private Tile[][] tileLocations;
     private int rows;
     private int columns;
     private ArrayList<DoorTile> doors = new ArrayList<>();
+    static final long serialVersionUID = 6469620024832591777L;
 
     /**
      * Creates a new Map with specified dimensions.
