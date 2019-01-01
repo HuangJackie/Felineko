@@ -13,20 +13,14 @@ class EnemyController extends EntityController {
      *
      * @param felineko the PApplet of the main sketch
      */
-    EnemyController(PApplet felineko, Enemy enemy, ArrayList<Enemy> activeEnemies) {
-        super(felineko, enemy);
+    EnemyController(PApplet felineko, ArrayList<Enemy> activeEnemies) {
+        super(felineko);
         this.activeEnemies = activeEnemies;
-        sprites = new ArrayList<>();
-        for (Enemy activeEnemy : activeEnemies) {
-            sprites.add(felineko.loadImage(activeEnemy.getName() + ".png"));
-        }
     }
 
-    void drawEnemies(){
-        for (int i = 0; i < activeEnemies.size(); i++){
-            getPApplet().image(sprites.get(i), activeEnemies.get(i).getX(), activeEnemies.get(i).getY());
-        }
-    }
+//    void drawEnemies(){
+
+//    }
 
     void updateLocation(Map map){
         for (Enemy activeEnemy : activeEnemies) {
@@ -105,6 +99,21 @@ class EnemyController extends EntityController {
     void immunityUpdateAll(){
         for (Enemy enemy : activeEnemies){
             immunityUpdate(enemy);
+        }
+    }
+
+    @Override
+    void setUpSprite() {
+        sprites = new ArrayList<>();
+        for (Enemy activeEnemy : activeEnemies) {
+            sprites.add(getPApplet().loadImage(activeEnemy.getName() + ".png"));
+        }
+    }
+
+    @Override
+    void drawEntity() {
+        for (int i = 0; i < activeEnemies.size(); i++){
+            getPApplet().image(sprites.get(i), activeEnemies.get(i).getX(), activeEnemies.get(i).getY());
         }
     }
 }

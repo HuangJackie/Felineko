@@ -9,26 +9,36 @@ class PlayerController extends EntityController{
     private PApplet felineko;
     private PImage[] attackSprite = new PImage[17];
     private int skipFrame;
+    private PImage sprite;
+    private Player hero;
 
     PlayerController (PApplet felineko, Player hero){
-        super(felineko, hero);
+        super(felineko);
+        this.hero = hero;
         this.felineko = felineko;
         attackFrame = 0;
         skipFrame = 0;
     }
 
-    void loadAttackSprites(Player hero){
+    @Override
+    void setUpSprite() {
+        sprite = felineko.loadImage(hero.getName() + ".png");
         for (int i = 0; i < attackSprite.length; i++){
             //TODO make ATTACK static final variable.
             attackSprite[i] = felineko.loadImage("HERO" + "ATTACK" + Integer.toString(i+1)+ ".png");
         }
     }
 
-    private boolean canJump(Map map, Player hero){
+    @Override
+    void drawEntity(){
+        felineko.image(sprite, hero.getX(), hero.getY());
+    }
+
+    private boolean canJump(Map map){
         return (hero.getJumpCounter() < 2 && !onGround(map, hero) && !hero.isSlidOff()) || (onGround(map, hero) && !hero.hasJumpedOnce());
     }
 
-    void notJumping(Map map, Player hero){
+    void notJumping(Map map){
         if (onGround(map, hero)) {
             hero.setJumpCounter(0);
             hero.resetFallSpeed();
@@ -38,8 +48,8 @@ class PlayerController extends EntityController{
         hero.setSlidOff(false);
     }
 
-    void playerJump(Map map, Player hero){
-        if (canJump(map, hero)){
+    void playerJump(Map map){
+        if (canJump(map)){
             jump(map, hero);
         }
         hero.setHasJumpedOnce(true);
@@ -48,14 +58,14 @@ class PlayerController extends EntityController{
         }
     }
 
-    void checkSpecialCollision(Map map, Player hero) {
+    void checkSpecialCollision(Map map) {
         for (int i = 0; i < hero.getHeight(); i+=29){
-            applyTileEffect(map, map.getTile(hero.getX()/30, (hero.getY()+i)/30), hero);
-            applyTileEffect(map, map.getTile((hero.getX()+hero.getWidth()-1)/30, (hero.getY()+i)/30), hero);
+            applyTileEffect(map, map.getTile(hero.getX()/30, (hero.getY()+i)/30));
+            applyTileEffect(map, map.getTile((hero.getX()+hero.getWidth()-1)/30, (hero.getY()+i)/30));
         }
     }
 
-    private void applyTileEffect(Map map, Tile tile, Player hero) {
+    private void applyTileEffect(Map map, Tile tile) {
         String type = tile.getType();
         switch (type) {
             case "SPIKE":
@@ -87,7 +97,7 @@ class PlayerController extends EntityController{
         return attackFrame != 0;
     }
 
-    void drawAttack(Player hero){
+    void drawAttack(){
         felineko.image(attackSprite[attackFrame], hero.getX(), hero.getY());
         if(skipFrame == 0){
             attackFrame++;

@@ -23,11 +23,8 @@ public class Felineko extends PApplet implements Observer {
     private MapController mapController = new MapController(this);
     private PlayerController playerController;
     private EnemyController enemyController;
+    private EnemyFactory enemyFactory = new EnemyFactory();
     private Player hero;
-    private Enemy snake;
-    private Enemy snake2;
-    private Enemy snake3;
-    private Enemy snake4;
     private PVector translation = new PVector(0, 0);
     private PVector prevPlayerPos = new PVector(100, 100);
     private SoundFile file;
@@ -55,28 +52,16 @@ public class Felineko extends PApplet implements Observer {
         }
         map = mapController.setUpMap();
         mapController.loadMap(map);
-        keys[0]=false;
-        keys[1]=false;
-        keys[2]=false;
-        keys[3]=false;
-        keys[4]=false;
         path = sketchPath(audioName);
         file = new SoundFile(this, path);
-        ArrayList<Enemy> activeEnemies = new ArrayList<>();
-        snake = new Enemy(550, 1050, 1, 7, 20, 30, 60, 1, "SNAKE");
-        snake2 = new Enemy(820, 1050, 1, 7, 20, 30, 60, 1, "SNAKE");
-        snake3 = new Enemy(1110, 1200, 1, 7, 20, 30, 60, 1, "SNAKE");
-        snake4 = new Enemy(1110, 1020, 1, 7, 20, 30, 60, 1, "SNAKE");
+        ArrayList<Enemy> activeEnemies;
         hero = new Player(25,400, 1680, "KNIGHT", 60, 30, 5, "HERO", 20);
-//        hero = new Player(25,250, 720, "KNIGHT", 60, 30, 5, "HERO", 20);
-        activeEnemies.add(snake);
-        activeEnemies.add(snake2);
-        activeEnemies.add(snake3);
-        activeEnemies.add(snake4);
+        activeEnemies = enemyFactory.instantiateEnemies();
         playerController = new PlayerController(this, hero);
-        enemyController = new EnemyController(this, snake, activeEnemies);
-        playerController.loadAttackSprites(hero);
+        enemyController = new EnemyController(this, activeEnemies);
+        enemyController.setUpSprite();
         playerController.addObserver(this);
+        playerController.setUpSprite();
 //        file.play();
 //        file.loop();
     }
@@ -103,7 +88,7 @@ public class Felineko extends PApplet implements Observer {
                 mapController.drawMap(map);
                 image(healthBar[hero.getHP()/10], -(translation.x + 100), -(translation.y + 150));
                 image(coinBar[hero.getNumCoin()], -(translation.x - 470), -(translation.y + 150));
-                playerController.checkSpecialCollision(map, hero);
+                playerController.checkSpecialCollision(map);
                 playerController.applyGravity(map, hero);
 
                 if (keys[1]) {
@@ -119,22 +104,22 @@ public class Felineko extends PApplet implements Observer {
                 }
 
                 if (keys[2]) {
-                    playerController.playerJump(map, hero);
+                    playerController.playerJump(map);
                 } else {
-                    playerController.notJumping(map, hero);
+                    playerController.notJumping(map);
                 }
 
                 if (playerController.startedAttack()){
-                    playerController.drawAttack(hero);
+                    playerController.drawAttack();
                 }else{
-                    playerController.drawEntity(hero.getX(), hero.getY());
+                    playerController.drawEntity();
                 }
 
                 if(hero.getHP() == 0){
                     gameScreen = 2;
                 }
 
-                enemyController.drawEnemies();
+                enemyController.drawEntity();
                 enemyController.updateLocation(map);
                 enemyController.attackPlayer(hero);
                 translation.x -= hero.getX()-prevPlayerPos.x;

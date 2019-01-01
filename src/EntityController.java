@@ -1,24 +1,24 @@
 import processing.core.PApplet;
-import processing.core.PImage;
 
 import java.util.Observable;
 
 /**
  * An EntityController that manages the displaying/drawing of the Entity.
  */
-class EntityController extends Observable {
+abstract class EntityController extends Observable {
     private PApplet felineko;
-    private PImage sprite;
 
     /**
      * Creates a new EntityController to manage drawing and updating location.
      *
      * @param felineko the PApplet of the main sketch
      */
-    EntityController (PApplet felineko, Entity entity){
+    EntityController (PApplet felineko){
         this.felineko = felineko;
-        sprite = felineko.loadImage(entity.getName() + ".png");
     }
+
+    abstract void setUpSprite();
+
 
     void immunityUpdate(Entity entity){
         if (getPApplet().millis() - entity.getDamageTime() > 1000) {
@@ -28,13 +28,8 @@ class EntityController extends Observable {
 
     /**
      * Displaying the entity on screen.
-     *
-     * @param x horizontal coordinate.
-     * @param y vertical coordinate.
      */
-    void drawEntity(int x, int y){
-        felineko.image(sprite, x, y);
-    }
+    abstract void drawEntity();
 
     /**
      * Updating x, y coordinates of player when falling due to gravity.
