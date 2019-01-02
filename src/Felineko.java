@@ -1,3 +1,10 @@
+/*
+ * Used the Processing Library and the Processing Sound Library.
+ *
+ * Music created using https://www.beepbox.co/#6n31s0kbl00e05t7m0a7g0fj7i0r1o3210T0w1f3d1c4h0v0T0w1f1d1c3h0v2T0w2f1d1c0h0v3T2w1d1v0b4zgQ4x4h4h4h4h4h4h4h4h4z8N4h4h4h4x804h4h4h4p229IMMpFBcu6p_iCu3jmCBwFxMfR4QPRnknRdnmZgjZplcFEZZVRbCDTw9nPmQPPDeYPOg0F5gFDM5cu1V0swuhhpxNjdjCgYidd7i3g1daoUZ0q0Pjng6AcQFEYz19Fym6wOOt551B0
+ * BeepBox website.
+ */
+
 import processing.core.PApplet;
 import processing.core.PImage;
 import processing.core.PVector;
@@ -7,39 +14,141 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
-/* Music created using https://www.beepbox.co/#6n31s0kbl00e05t7m0a7g0fj7i0r1o3210T0w1f3d1c4h0v0T0w1f1d1c3h0v2T0w2f1d1c0h0v3T2w1d1v0b4zgQ4x4h4h4h4h4h4h4h4h4z8N4h4h4h4x804h4h4h4p229IMMpFBcu6p_iCu3jmCBwFxMfR4QPRnknRdnmZgjZplcFEZZVRbCDTw9nPmQPPDeYPOg0F5gFDM5cu1V0swuhhpxNjdjCgYidd7i3g1daoUZ0q0Pjng6AcQFEYz19Fym6wOOt551B0
- * BeepBox website.
- */
 
 /**
  * A platformer game.
  */
 public class Felineko extends PApplet implements Observer {
+
+    /**
+     * List of keys that are pressed.
+     */
     private boolean[] keys = new boolean[7];
+
+    /**
+     * Background of the menu with a saved game.
+     */
     private PImage menuBackgroundHasSave;
+
+    /**
+     * Background of the menu without a saved file.
+     */
     private PImage menuBackground;
+
+    /**
+     * Background of a winning game.
+     */
     private PImage menuWin;
+
+    /**
+     * Background of a loosing game.
+     */
     private PImage menuLose;
+
+    /**
+     * Background of the instructions.
+     */
     private PImage menuInstructions;
+
+    /**
+     * Background of a paused game.
+     */
     private PImage menuPause;
-    private int gameScreen = 0;
-    private Map map;
-    private ArrayList<Enemy> activeEnemies;
-    private MapController mapController = new MapController(this);
-    private PlayerController playerController;
-    private EnemyController enemyController;
-    private EnemyFactory enemyFactory = new EnemyFactory();
-    private Player hero;
-    private PVector translation = new PVector(0, 0);
-    private PVector prevPlayerPos = new PVector(100, 100);
-    private SoundFile file;
+
+    /**
+     * Images for the health bar.
+     */
     private PImage[] healthBar = new PImage[11];
+
+    /**
+     * Images for the number of fish coins collected.
+     */
     private PImage[] coinBar = new PImage[6];
+
+    /**
+     * Image of the pause button.
+     */
     private PImage pause;
+
+    /**
+     * Identifies which gameScreen is being shown.
+     */
+    private int gameScreen = 0;
+
+    /**
+     * The tileMap of the Game.
+     */
+    private Map map;
+
+    /**
+     * List of Active Enemies.
+     */
+    private ArrayList<Enemy> activeEnemies;
+
+    /**
+     * Controller class to manage the Map Class.
+     */
+    private MapController mapController = new MapController(this);
+
+    /**
+     * Controller class to manage the Player Class.
+     */
+    private PlayerController playerController;
+
+    /**
+     * Controller class to manage the Enemy Class.
+     */
+    private EnemyController enemyController;
+
+    /**
+     * Factory Class to initialize the Enemies.
+     */
+    private EnemyFactory enemyFactory = new EnemyFactory();
+
+    /**
+     * The Player object the user controls.
+     */
+    private Player hero;
+
+    /**
+     * Amount of pixels to shift the screen by when moving.
+     */
+    private PVector translation = new PVector(0, 0);
+
+    /**
+     * The previous player's position.
+     */
+    private PVector prevPlayerPos = new PVector(100, 100);
+
+    /**
+     * Whether the game was won.
+     */
     private boolean win;
+
+    /**
+     * Whether the saved game file is present.
+     */
     private boolean fileExists;
-    String audioName = "Felineko.wav";
-    String path;
+
+    /**
+     * Name of the saved state of the Player object.
+     */
+    private static final String HERO_FILE = "hero.ser";
+
+    /**
+     * Name of the saved state of the Map object.
+     */
+    private static final String MAP_FILE = "map.ser";
+
+    /**
+     * Name of the saved state of the Enemies object.
+     */
+    private static final String ENEMIES_FILE = "enemies.ser";
+
+    /**
+     * Name of the audio file.
+     */
+    private static final String AUDIO_FILE = "Felineko.wav";
 
     /**
      * Preset settings of the game.
@@ -53,10 +162,12 @@ public class Felineko extends PApplet implements Observer {
         menuInstructions = loadImage("Instructions.png");
         menuPause = loadImage("PAUSEMENU.png");
         menuBackgroundHasSave = loadImage("MenuOne.png");
+
         menuBackground.resize(600, 0);
         menuInstructions.resize(600, 0);
         menuPause.resize(600, 0);
         menuBackgroundHasSave.resize(600, 0);
+
         for (int i = 0; i < healthBar.length; i++) {
             healthBar[i] = loadImage(Integer.toString(i * 10) + ".png");
         }
@@ -64,13 +175,18 @@ public class Felineko extends PApplet implements Observer {
             coinBar[i] = loadImage("COIN" + Integer.toString(i) + ".png");
         }
         pause = loadImage("PAUSE.png");
-        menuPause.resize(600, 0);
-        path = sketchPath(audioName);
-        file = new SoundFile(this, path);
-//        file.play();
-//        file.loop();
+
+        String path = sketchPath(AUDIO_FILE);
+        SoundFile file = new SoundFile(this, path);
+
+        map = mapController.setUpMap();
+        mapController.loadMap(map);
+        file.loop();
     }
 
+    /**
+     * Reset the Entity and Tile Locations of the game.
+     */
     private void resetGame() {
         map = mapController.setUpMap();
         mapController.loadMap(map);
@@ -80,27 +196,30 @@ public class Felineko extends PApplet implements Observer {
 
         enemyController = new EnemyController(this, activeEnemies);
         enemyController.setUpSprite();
-        hero = new Player(25, 400, 1680, "KNIGHT", 60, 30, 5, "HERO", 20);
+        hero = new Player(400, 1680, 60, 30, 5, "HERO", 20);
         playerController = new PlayerController(this, hero);
         playerController.setUpSprite();
         playerController.addObserver(this);
     }
 
+    /**
+     * Load the saved game from serializable files.
+     */
     private void loadGame() {
         try {
-            FileInputStream fileIn = new FileInputStream("hero.ser");
+            FileInputStream fileIn = new FileInputStream(HERO_FILE);
             ObjectInputStream objectIn = new ObjectInputStream(fileIn);
 
             hero = (Player) objectIn.readObject();
             objectIn.close();
 
-            fileIn = new FileInputStream("map.ser");
+            fileIn = new FileInputStream(MAP_FILE);
             objectIn = new ObjectInputStream(fileIn);
 
             map = (Map) objectIn.readObject();
             objectIn.close();
 
-            fileIn = new FileInputStream("activeEnemies.ser");
+            fileIn = new FileInputStream(ENEMIES_FILE);
             objectIn = new ObjectInputStream(fileIn);
 
             activeEnemies = (ArrayList<Enemy>) objectIn.readObject();
@@ -110,7 +229,6 @@ public class Felineko extends PApplet implements Observer {
         }
 
         mapController.loadMap(map);
-        mapController.setMap(map);
         mapController.addObservers();
 
         enemyController = new EnemyController(this, activeEnemies);
@@ -120,17 +238,20 @@ public class Felineko extends PApplet implements Observer {
         playerController.addObserver(this);
     }
 
+    /**
+     * Erase the contents of the serializable files.
+     */
     private void eraseGame() {
         try {
-            FileOutputStream fileOut = new FileOutputStream("hero.ser");
+            FileOutputStream fileOut = new FileOutputStream(HERO_FILE);
             ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
             objectOut.close();
 
-            fileOut = new FileOutputStream("map.ser");
+            fileOut = new FileOutputStream(MAP_FILE);
             objectOut = new ObjectOutputStream(fileOut);
             objectOut.close();
 
-            fileOut = new FileOutputStream("activeEnemies.ser");
+            fileOut = new FileOutputStream(ENEMIES_FILE);
             objectOut = new ObjectOutputStream(fileOut);
             objectOut.close();
 
@@ -160,8 +281,8 @@ public class Felineko extends PApplet implements Observer {
                     resetGame();
                 } else if (mouseX >= 164 && mouseX <= 430 && mouseY >= 445 && mouseY <= 479 && mousePressed) {
                     gameScreen = 3;
-                } else
-                    break;
+                }
+                break;
             case 1:
                 translate(translation.x + 100, translation.y + 150);
                 playerController.immunityUpdate(hero);
@@ -230,6 +351,7 @@ public class Felineko extends PApplet implements Observer {
                 if (mouseX >= 478 && mouseX <= 513 && mouseY >= 94 && mouseY <= 109 && mousePressed) {
                     gameScreen = 0;
                 }
+                break;
             case 4:
                 background(menuPause);
                 if (keys[5]) {
@@ -250,10 +372,13 @@ public class Felineko extends PApplet implements Observer {
         super.exit();
     }
 
+    /**
+     * Check if a saved game exists.
+     */
     private void checkExists() {
         try {
 
-            FileInputStream fileIn = new FileInputStream("hero.ser");
+            FileInputStream fileIn = new FileInputStream(HERO_FILE);
             ObjectInputStream objectIn = new ObjectInputStream(fileIn);
 
             hero = (Player) objectIn.readObject();
@@ -269,21 +394,24 @@ public class Felineko extends PApplet implements Observer {
     }
 
 
+    /**
+     * Save the current state of the game.
+     */
     private void saveGame() {
         try {
-            FileOutputStream fileOut = new FileOutputStream("hero.ser");
+            FileOutputStream fileOut = new FileOutputStream(HERO_FILE);
             ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
 
             objectOut.writeObject(hero);
             objectOut.close();
 
-            fileOut = new FileOutputStream("map.ser");
+            fileOut = new FileOutputStream(MAP_FILE);
             objectOut = new ObjectOutputStream(fileOut);
 
             objectOut.writeObject(map);
             objectOut.close();
 
-            fileOut = new FileOutputStream("activeEnemies.ser");
+            fileOut = new FileOutputStream(ENEMIES_FILE);
             objectOut = new ObjectOutputStream(fileOut);
 
             objectOut.writeObject(activeEnemies);

@@ -1,23 +1,27 @@
+/**
+ * Creates a CoinTile object that the Player object can collect.
+ */
 class CoinTile extends Tile {
 
-    private static int id = 0;
-    private boolean collected = false;
-
     /**
-     * Creates a Tile with a type "name" and a X/Y location.
+     * Creates a CoinTile with a type "name", a X/Y location, and whether it's collidable.
      *
-     * @param type Type of tile/Name of the sprite png.
-     * @param x    X-coordinate of the tile.
-     * @param y    Y-coordinate of the tile.
+     * @param type       type of tile/Name of the sprite png.
+     * @param x          x-coordinate of the tile.
+     * @param y          y-coordinate of the tile.
+     * @param collidable whether the tile is collidable.
      */
     CoinTile(String type, int x, int y, boolean collidable) {
         super(type, x, y, collidable);
-        CoinTile.id++;
     }
 
-    void collect(Player hero){
-        collected = true;
-        this.setType("AIR");
+    /**
+     * Sets the tile to invisible "AIR" when the player collects it.
+     *
+     * @param hero player collecting the CoinTile.
+     */
+    void collect(Player hero) {
+        this.setTypeToAir();
         hero.collectCoin();
         setChanged();
         notifyObservers();

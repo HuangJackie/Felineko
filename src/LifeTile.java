@@ -1,13 +1,25 @@
+/**
+ * Creates a LifeTile object that heals the Player object.
+ */
 class LifeTile extends Tile {
+
+    /**
+     * Number of health points the Player can recover when colliding with this LifeTile.
+     */
     private int recoverPoints;
+
+    /**
+     * Whether the Tile has been used.
+     */
     private boolean active;
 
     /**
-     * Creates a Tile with a type "name" and a X/Y location.
+     * Creates a LifeTile with a type "name", a X/Y location, and whether it's collidable.
      *
-     * @param type Type of tile/Name of the sprite png.
-     * @param x    X-coordinate of the tile.
-     * @param y    Y-coordinate of the tile.
+     * @param type       type of tile/Name of the sprite png.
+     * @param x          x-coordinate of the tile.
+     * @param y          y-coordinate of the tile.
+     * @param collidable whether the tile is collidable.
      */
     LifeTile(String type, int x, int y, boolean collidable) {
         super(type, x, y, collidable);
@@ -22,13 +34,13 @@ class LifeTile extends Tile {
      */
     void recoverHP(Player hero) {
         if (active) {
-            if (hero.getHP()+recoverPoints >= 100){
+            if (hero.getHP() + recoverPoints >= 100) {
                 hero.setHP(100);
-            }else {
+            } else {
                 hero.setHP(hero.getHP() + recoverPoints);
             }
             active = false;
-            this.setType("AIR");
+            this.setTypeToAir();
             setChanged();
             notifyObservers();
         }

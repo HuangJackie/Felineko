@@ -1,13 +1,34 @@
+/**
+ * An Enemy Entity in the game.
+ */
 class Enemy extends Entity {
 
+    /**
+     * Whether this Enemy is alive.
+     */
     private boolean active;
 
-    Enemy(int x, int y, int fallSpeed, int jumpSpeed, int damagePoints, int height, int width, int maxVelocity, String name) {
+    /**
+     * Creates a new Enemy with specified coordinates, size, horizontal and vertical velocity and damagePoints.
+     *
+     * @param x            horizontal coordinate.
+     * @param y            vertical coordinate.
+     * @param fallSpeed    max falling velocity.
+     * @param jumpSpeed    max jumping velocity.
+     * @param height       number of pixels in the height of the sprite.
+     * @param width        number of pixels in the width of the sprite.
+     * @param maxVelocity  max horizontal velocity.
+     * @param name         name of the sprite file.
+     * @param damagePoints amount of damage the Enemy can cause.
+     */
+    Enemy(int x, int y, int fallSpeed, int jumpSpeed, int height, int width, int maxVelocity, String name, int damagePoints) {
         super(x, y, fallSpeed, jumpSpeed, height, width, maxVelocity, name, damagePoints);
         active = true;
     }
 
-
+    /**
+     * Change the direction the Enemy is moving in.
+     */
     void changeDirection() {
         if (this.getDirection().equals(Entity.RIGHT)) {
             this.setDirection(Entity.LEFT);
@@ -16,6 +37,12 @@ class Enemy extends Entity {
         }
     }
 
+    /**
+     * Return whether attack was within attacking range.
+     *
+     * @param hero player to attack
+     * @return whether attack was within attack range.
+     */
     boolean withinAttackRange(Player hero) {
         int xHeroLeft = hero.getX();
         int xHeroRight = hero.getX() + hero.getWidth();
@@ -25,7 +52,13 @@ class Enemy extends Entity {
         return leftCollide || rightCollide;
     }
 
-    boolean withinAttackedRangeRight(Player hero) {
+    /**
+     * Return whether Enemy is within range to be attacked by a Player.
+     *
+     * @param hero player attempting to attack.
+     * @return whether Enemy is within range to be attacked by a Player.
+     */
+    boolean withinAttackedRange(Player hero) {
         int xHeroLeft;
         int xHeroRight;
         int yHeroBottom;
@@ -44,12 +77,12 @@ class Enemy extends Entity {
             xHeroRight = hero.getX() + hero.getWidth() + 45 - 75;
         }
         yHeroBottom = hero.getY() + hero.getHeight() - 10;
-        yHeroTop = hero.getY() - 20;
+        yHeroTop = hero.getY() + 10;
 
         xEnemyLeft = getX();
         yEnemyBottom = getY() + getHeight();
         xEnemyRight = getX() + getWidth();
-        yEnemyTop = getY();
+        yEnemyTop = getY() + 20;
 
         boolean leftTopCollide = (xHeroLeft < xEnemyLeft && xEnemyLeft < xHeroRight) && (yHeroTop < yEnemyTop && yEnemyTop < yHeroBottom);
         boolean leftBottomCollide = (xHeroLeft < xEnemyLeft && xEnemyLeft < xHeroRight) && (yHeroTop < yEnemyBottom && yEnemyBottom < yHeroBottom);
@@ -58,10 +91,18 @@ class Enemy extends Entity {
         return leftTopCollide || leftBottomCollide || rightTopCollide || rightBottomCollide;
     }
 
+    /**
+     * Set Enemy as inactive/defeated.
+     */
     void setInactive() {
         active = false;
     }
 
+    /**
+     * Return if the Enemy is active/undefeated.
+     *
+     * @return if the Enemy is still active.
+     */
     boolean isActive() {
         return active;
     }
